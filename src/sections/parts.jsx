@@ -9,7 +9,7 @@
 import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { Marquee, Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
-import { WRAP, MARK, HORIZ_DARK, OFFICE, DEPARTMENTS, VALUES, PROCESS } from '../data/site.js';
+import { WRAP, MARK, HORIZ_DARK, OFFICE, PHOTOS, DEPARTMENTS, VALUES, PROCESS } from '../data/site.js';
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -383,13 +383,25 @@ export function About() {
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '190px 190px', gap: 16 }}
         >
           <div style={{ gridRow: 'span 2', borderRadius: 18, overflow: 'hidden' }}>
-            <ImageSlot label="Rodaje / territorio" shape="rounded" radius={18} />
+            <ImageSlot
+              src={PHOTOS.aboutRodaje.img}
+              alt={PHOTOS.aboutRodaje.alt}
+              label={PHOTOS.aboutRodaje.label}
+              shape="rounded"
+              radius={18}
+            />
           </div>
           <div style={{ borderRadius: 18, overflow: 'hidden' }}>
             <img src={OFFICE} alt="Equipo Sidartha" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div style={{ borderRadius: 18, overflow: 'hidden' }}>
-            <ImageSlot label="Evento / stand" shape="rounded" radius={18} />
+            <ImageSlot
+              src={PHOTOS.aboutEvento.img}
+              alt={PHOTOS.aboutEvento.alt}
+              label={PHOTOS.aboutEvento.label}
+              shape="rounded"
+              radius={18}
+            />
           </div>
         </div>
       </div>

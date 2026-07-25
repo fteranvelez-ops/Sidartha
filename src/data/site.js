@@ -55,16 +55,35 @@ export const PROCESS = [
   { n: '04', title: 'Generamos impacto', desc: 'Diseñamos experiencias que conectan, inspiran y transforman realidades.' },
 ];
 
+/*
+ * Fotografía.
+ *
+ * Cada `img` en null se dibuja como un placeholder etiquetado, que mantiene la
+ * caja del layout y anuncia lo que falta. Para poner una foto real: copia el
+ * archivo a public/assets/photography/ y escribe aquí su ruta, por ejemplo
+ *
+ *   img: '/assets/photography/manabi.jpg'
+ *
+ * La ruta arranca en / porque public/ se sirve desde la raíz del sitio.
+ * No hace falta tocar ningún componente.
+ */
 export const PROJECTS = [
-  { id: 'manabi', cat: 'Documental', title: 'Manabí, gastronomía milenaria', tall: false },
-  { id: 'dayana', cat: 'Institucional', title: 'Historia de Dayana — Banco Mundial', tall: true },
-  { id: 'lundin', cat: 'Comunicación 360', title: '10 años de Lundin Gold', tall: false },
-  { id: 'huawei', cat: 'Evento', title: 'Huawei Connect', tall: true },
-  { id: 'refugiados', cat: 'Comunicación 360', title: 'Respuesta para Refugiados y Migrantes', tall: false },
-  { id: 'zaimella', cat: 'Evento', title: 'Navidad con Zaimella', tall: true },
-  { id: 'educom', cat: 'Comunicación 360', title: 'Proyecto Educomunicaciones', tall: false },
-  { id: 'aviles', cat: 'Fotografía', title: 'Documental — Manuel Avilés', tall: true },
+  { id: 'manabi', cat: 'Documental', title: 'Manabí, gastronomía milenaria', tall: false, img: null },
+  { id: 'dayana', cat: 'Institucional', title: 'Historia de Dayana — Banco Mundial', tall: true, img: null },
+  { id: 'lundin', cat: 'Comunicación 360', title: '10 años de Lundin Gold', tall: false, img: null },
+  { id: 'huawei', cat: 'Evento', title: 'Huawei Connect', tall: true, img: null },
+  { id: 'refugiados', cat: 'Comunicación 360', title: 'Respuesta para Refugiados y Migrantes', tall: false, img: null },
+  { id: 'zaimella', cat: 'Evento', title: 'Navidad con Zaimella', tall: true, img: null },
+  { id: 'educom', cat: 'Comunicación 360', title: 'Proyecto Educomunicaciones', tall: false, img: null },
+  { id: 'aviles', cat: 'Fotografía', title: 'Documental — Manuel Avilés', tall: true, img: null },
 ];
+
+/* Las fotos sueltas que no pertenecen a ninguna lista. Mismo criterio. */
+export const PHOTOS = {
+  aboutRodaje: { img: null, label: 'Rodaje / territorio', alt: 'Equipo de Sidartha rodando en territorio' },
+  aboutEvento: { img: null, label: 'Evento / stand', alt: 'Stand de Sidartha en un evento' },
+  budhaiRetrato: { img: null, label: 'Retrato budh.ai', alt: 'budh.ai' },
+};
 
 export const STATS = [
   { k: '20+', v: 'Años de trayectoria' },
@@ -85,8 +104,8 @@ export const CLIENTS = [
 ];
 
 export const FOUNDERS = [
-  { name: 'Fabricio Terán Vélez', role: 'Fundador · Dirección de cuentas', tel: '0998103186', mail: 'fabricioteran@sidarthafilms.com', slot: 'fabricio' },
-  { name: 'Paulina Carrera Burbano', role: 'Comunicación · Proyectos', tel: '0998373892', mail: 'sidartha@sidarthafilms.com', slot: 'paulina' },
+  { name: 'Fabricio Terán Vélez', role: 'Fundador · Dirección de cuentas', tel: '0998103186', mail: 'fabricioteran@sidarthafilms.com', slot: 'fabricio', img: null },
+  { name: 'Paulina Carrera Burbano', role: 'Comunicación · Proyectos', tel: '0998373892', mail: 'sidartha@sidarthafilms.com', slot: 'paulina', img: null },
 ];
 
 export const LEGAL = {

@@ -12,7 +12,7 @@ import Icon from '../components/Icon.jsx';
 import { Marquee, Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
 import { Input, Textarea, Button } from '../components/ui.jsx';
 import { submitForm } from '../lib/forms.js';
-import { WRAP, MARK, HORIZ_LIGHT, PROJECTS, STATS, CLIENTS, FOUNDERS, LEGAL, SOCIAL } from '../data/site.js';
+import { WRAP, MARK, HORIZ_LIGHT, PROJECTS, PHOTOS, STATS, CLIENTS, FOUNDERS, LEGAL, SOCIAL } from '../data/site.js';
 
 /* ---------- pinned horizontal gallery ---------- */
 export function Portfolio() {
@@ -59,7 +59,7 @@ export function Portfolio() {
             {PROJECTS.map((p) => (
               <div key={p.id} className={'pcell' + (p.tall ? ' tall' : '')}>
                 <div className="pimg">
-                  <ImageSlot shape="rect" label={p.title} dark />
+                  <ImageSlot src={p.img} alt={p.title} shape="rect" label={p.title} dark />
                 </div>
                 <div className="pscrim" />
                 <div className="pmeta">
@@ -171,7 +171,13 @@ export function BudhAi() {
           <div style={{ position: 'relative', width: 190, height: 190 }}>
             <div className="ring" />
             <div style={{ position: 'absolute', inset: 11, borderRadius: '50%', overflow: 'hidden', background: 'var(--navy-800)' }}>
-              <ImageSlot shape="circle" label="Retrato budh.ai" dark />
+              <ImageSlot
+                src={PHOTOS.budhaiRetrato.img}
+                alt={PHOTOS.budhaiRetrato.alt}
+                shape="circle"
+                label={PHOTOS.budhaiRetrato.label}
+                dark
+              />
             </div>
           </div>
           <div style={{ textAlign: 'center' }}>
@@ -402,7 +408,7 @@ export function Contacto() {
               }}
             >
               <div style={{ width: 62, height: 62, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: 'var(--navy-800)' }}>
-                <ImageSlot shape="circle" label="Foto" dark />
+                <ImageSlot src={f.img} alt={f.name} shape="circle" label="Foto" dark />
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 500, color: 'var(--navy-900)' }}>{f.name}</div>
