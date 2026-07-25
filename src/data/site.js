@@ -1,0 +1,124 @@
+/* Site content. Ported verbatim from the Claude Design handoff
+   (ui_kits/marketing-site/parts.jsx + Home.jsx). */
+
+export const MARK = '/assets/logos/sidartha-mark.png';
+export const HORIZ_DARK = '/assets/logos/sidartha-horizontal-dark.png';
+export const HORIZ_LIGHT = '/assets/logos/sidartha-horizontal.png';
+export const OFFICE = '/assets/photography/office-sidartha-films.jpeg';
+
+export const WRAP = { maxWidth: 1240, margin: '0 auto', padding: '0 40px' };
+
+export const DEPARTMENTS = [
+  {
+    n: '01',
+    title: 'Comunicación Integral',
+    tag: 'Estrategia & Eventos',
+    desc: 'Diseñamos experiencias únicas para marcas, instituciones y comunidades. Estrategias 360° que generan impacto.',
+    chips: ['Ferias', 'Lanzamientos', 'Foros', 'Activaciones de marca', 'Estrategia 360°'],
+  },
+  {
+    n: '02',
+    title: 'Producción Audiovisual',
+    tag: 'Historias con impacto',
+    desc: 'Contamos historias auténticas con una estética poderosa y enfoque social, ambiental, cultural y comercial.',
+    chips: ['Documentales', 'Series', 'Cortometrajes', 'Contenido institucional', 'Fotografía'],
+  },
+  {
+    n: '03',
+    title: 'Network',
+    tag: 'Colaboración & Expansión',
+    desc: 'Un ecosistema para conectar marcas, profesionales y creativos, potenciando oportunidades en diversos sectores.',
+    chips: ['Redes de contacto', 'Alianzas estratégicas', 'Proyectos colaborativos', 'Innovación'],
+  },
+];
+
+export const VALUES = [
+  { icon: 'eye', title: 'Mirada clara', tag: 'Estrategia', desc: 'Ver el problema real antes de proponer piezas. Ninguna producción arranca sin diagnóstico.' },
+  { icon: 'ear', title: 'Escucha profunda', tag: 'Investigación', desc: 'Ir al territorio y hablar con la gente. La historia la tiene el protagonista, no el brief.' },
+  { icon: 'message-square-quote', title: 'Palabra justa', tag: 'Comunicación', desc: 'Decir lo necesario, sin inflar. No prometemos alcances que no podemos sostener.' },
+  { icon: 'infinity', title: 'Camino continuo', tag: 'Relación', desc: 'Acompañar después del entregable. 20 años se construyen quedándose.' },
+];
+
+export const PROCESS = [
+  { n: '01', title: 'Escuchamos tu historia', desc: 'Conectamos comunidades y equipos técnicos para entender qué te hace único.' },
+  { n: '02', title: 'Creamos la estrategia', desc: 'Desarrollamos estrategias de comunicación 360° para el desarrollo y el cambio.' },
+  { n: '03', title: 'Producimos', desc: 'Damos vida a historias con impacto: audiovisuales, eventos y experiencias.' },
+  { n: '04', title: 'Generamos impacto', desc: 'Diseñamos experiencias que conectan, inspiran y transforman realidades.' },
+];
+
+export const PROJECTS = [
+  { id: 'manabi', cat: 'Documental', title: 'Manabí, gastronomía milenaria', tall: false },
+  { id: 'dayana', cat: 'Institucional', title: 'Historia de Dayana — Banco Mundial', tall: true },
+  { id: 'lundin', cat: 'Comunicación 360', title: '10 años de Lundin Gold', tall: false },
+  { id: 'huawei', cat: 'Evento', title: 'Huawei Connect', tall: true },
+  { id: 'refugiados', cat: 'Comunicación 360', title: 'Respuesta para Refugiados y Migrantes', tall: false },
+  { id: 'zaimella', cat: 'Evento', title: 'Navidad con Zaimella', tall: true },
+  { id: 'educom', cat: 'Comunicación 360', title: 'Proyecto Educomunicaciones', tall: false },
+  { id: 'aviles', cat: 'Fotografía', title: 'Documental — Manuel Avilés', tall: true },
+];
+
+export const STATS = [
+  { k: '20+', v: 'Años de trayectoria' },
+  { k: '360°', v: 'Comunicación integral' },
+  { k: '3', v: 'Áreas al unísono' },
+  { k: '+15', v: 'Marcas e instituciones' },
+];
+
+export const CLIENTS = [
+  'Banco Mundial',
+  'Lundin Gold',
+  'Huawei',
+  'Zaimella',
+  'ACNUR',
+  'ONGs',
+  'Instituciones públicas',
+  'Instituciones privadas',
+];
+
+export const FOUNDERS = [
+  { name: 'Fabricio Terán Vélez', role: 'Fundador · Dirección de cuentas', tel: '0998103186', mail: 'fabricioteran@sidarthafilms.com', slot: 'fabricio' },
+  { name: 'Paulina Carrera Burbano', role: 'Comunicación · Proyectos', tel: '0998373892', mail: 'sidartha@sidarthafilms.com', slot: 'paulina' },
+];
+
+export const LEGAL = {
+  terminos: {
+    label: 'Términos y Condiciones',
+    body: [
+      ['p', 'El presente sitio es propiedad de Sidartha Comunicación (Ecuador). El acceso y uso del sitio implica la aceptación de estos términos. Si no estás de acuerdo, te pedimos no utilizar el sitio.'],
+      ['h', '1. Uso del sitio'],
+      ['p', 'Los contenidos tienen fines informativos sobre nuestros servicios de comunicación, producción audiovisual y eventos. Nos reservamos el derecho de modificar o actualizar la información en cualquier momento sin previo aviso.'],
+      ['h', '2. Propiedad intelectual'],
+      ['p', 'La marca Sidartha, su logotipo, los textos, videos, fotografías y demás materiales son propiedad de Sidartha Comunicación o de sus respectivos titulares, y están protegidos por la legislación de propiedad intelectual. Queda prohibida su reproducción total o parcial sin autorización.'],
+      ['h', '3. Responsabilidad'],
+      ['p', 'Sidartha Comunicación no se responsabiliza por el uso que terceros hagan de la información publicada, ni por daños derivados del acceso o imposibilidad de acceso al sitio.'],
+      ['h', '4. Legislación aplicable'],
+      ['p', 'Estos términos se rigen por la legislación ecuatoriana. Cualquier controversia se someterá a los tribunales competentes del Ecuador.'],
+    ],
+  },
+  privacidad: {
+    label: 'Política de Privacidad',
+    body: [
+      ['p', 'En Sidartha Comunicación valoramos tu privacidad. Esta política describe cómo recopilamos y tratamos los datos personales que nos facilitas.'],
+      ['h', '1. Datos que recopilamos'],
+      ['p', 'Recopilamos los datos que nos proporcionas voluntariamente a través del formulario de contacto (nombre, correo electrónico y el mensaje sobre tu proyecto), con el único fin de responder a tu solicitud.'],
+      ['h', '2. Finalidad del tratamiento'],
+      ['p', 'Utilizamos tus datos para contactarte, elaborar propuestas y dar seguimiento a tu consulta. No cedemos ni vendemos tus datos a terceros.'],
+      ['h', '3. Conservación'],
+      ['p', 'Conservamos tus datos únicamente durante el tiempo necesario para gestionar tu solicitud y las obligaciones legales derivadas.'],
+      ['h', '4. Tus derechos'],
+      ['p', 'Puedes ejercer tus derechos de acceso, rectificación, eliminación y oposición escribiéndonos a sidartha@sidarthafilms.com.'],
+    ],
+  },
+  cookies: {
+    label: 'Política de Cookies',
+    body: [
+      ['p', 'Este sitio utiliza cookies para mejorar tu experiencia de navegación y analizar el uso del sitio de forma anónima.'],
+      ['h', '1. Qué son las cookies'],
+      ['p', 'Son pequeños archivos que se almacenan en tu dispositivo cuando visitas un sitio web, y permiten recordar tus preferencias.'],
+      ['h', '2. Tipos de cookies'],
+      ['p', 'Utilizamos cookies técnicas (necesarias para el funcionamiento del sitio) y cookies analíticas (para entender cómo se usa el sitio y mejorarlo).'],
+      ['h', '3. Gestión'],
+      ['p', 'Puedes configurar o desactivar las cookies desde los ajustes de tu navegador en cualquier momento. Desactivarlas puede afectar el funcionamiento del sitio.'],
+    ],
+  },
+};

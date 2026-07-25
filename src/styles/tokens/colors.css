@@ -1,0 +1,22 @@
+:root{
+--teal-100:#E3F8FB;--teal-200:#BFEEF5;--teal-300:#7FDCEA;--teal-400:#45CEDF;--teal-500:#22C1DD;--teal-600:#1AA3BD;--teal-700:#14829A;--teal-800:#0E5F71;
+--navy-900:#26313B;--navy-800:#2F3D48;--navy-700:#3D5060;--navy-600:#54697A;--navy-500:#71879A;
+--gray-50:#FAFBFC;--gray-100:#F2F4F6;--gray-200:#E6E9EC;--gray-300:#D4D9DD;--gray-400:#AEB6BD;--gray-500:#899299;
+--white:#FFFFFF;
+--color-bg:var(--white);--color-surface:var(--gray-50);--color-surface-alt:var(--gray-100);
+--color-text-primary:var(--navy-800);--color-text-secondary:var(--navy-600);--color-text-muted:var(--gray-500);
+--color-text-on-dark:var(--white);--color-text-on-dark-muted:var(--teal-200);
+--color-accent:var(--teal-500);--color-accent-hover:var(--teal-600);--color-accent-active:var(--teal-700);--color-accent-tint:var(--teal-100);
+--color-border:var(--gray-200);--color-border-strong:var(--gray-300);
+--color-dark-surface:var(--navy-800);--color-dark-surface-alt:var(--navy-900);
+--focus-ring:0 0 0 3px var(--teal-200);
+
+/* CULTURAS — supporting palette. Earth tones shared by Andean/Manabí
+   ceramics and the Buddhist robe. Editorial and cultural work only;
+   never as a UI accent, never more than one per composition. */
+--clay-300:#E8C0AE;--clay-500:#C86B4A;--clay-700:#8E4530;
+--saffron-300:#F2D9A6;--saffron-500:#E0A340;--saffron-700:#A9741F;
+--sand-100:#F6F1E9;--sand-300:#E4D9C8;--sand-500:#C6B7A0;
+
+--color-editorial-warm:var(--clay-500);--color-editorial-light:var(--saffron-500);--color-editorial-paper:var(--sand-100);
+}
