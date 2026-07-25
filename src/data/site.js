@@ -8,6 +8,15 @@ export const OFFICE = '/assets/photography/office-sidartha-films.jpeg';
 
 export const WRAP = { maxWidth: 1240, margin: '0 auto', padding: '0 40px' };
 
+/* Enlaces del footer. `href: null` deja el icono fuera del render en vez de
+   dejarlo apuntando a ninguna parte: un icono que no lleva a su perfil es
+   peor que un icono ausente. */
+export const SOCIAL = [
+  { icon: 'instagram', label: 'Instagram de Sidartha', href: 'https://www.instagram.com/sidarthafilmsec/' },
+  { icon: 'facebook', label: 'Facebook de Sidartha', href: 'https://www.facebook.com/sidarthacomunicacion' },
+  { icon: 'globe', label: 'sidarthafilms.com', href: 'https://sidarthafilms.com' },
+];
+
 export const DEPARTMENTS = [
   {
     n: '01',

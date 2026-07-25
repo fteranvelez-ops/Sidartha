@@ -46,10 +46,35 @@ export function Nav() {
               {l.label}
             </a>
           ))}
-          <div style={{ position: 'relative' }} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-            <span className="navlink" style={{ color: 'var(--navy-700)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          {/* Production fix: the mockup opened this menu on hover from a <span>,
+              so it was unreachable by keyboard and on touch. Now a real button
+              that toggles on click, still opens on hover, and closes on Escape. */}
+          <div
+            style={{ position: 'relative' }}
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+            onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}
+          >
+            <button
+              type="button"
+              className="navlink"
+              aria-expanded={open}
+              aria-haspopup="true"
+              onClick={() => setOpen((v) => !v)}
+              style={{
+                color: 'var(--navy-700)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                fontSize: 'inherit',
+                cursor: 'pointer',
+              }}
+            >
               Servicios <Icon name="chevron-down" size={15} />
-            </span>
+            </button>
             {open && (
               <div
                 style={{
@@ -69,6 +94,7 @@ export function Nav() {
                   <a
                     key={d.n}
                     href="#areas"
+                    onClick={() => setOpen(false)}
                     style={{
                       display: 'block',
                       padding: '10px 14px',
@@ -112,7 +138,7 @@ export function Nav() {
               cursor: 'pointer',
             }}
           >
-            <Icon name={mobile ? 'x' : 'chevron-down'} size={18} />
+            <Icon name={mobile ? 'x' : 'menu'} size={18} />
           </button>
         </div>
       </div>

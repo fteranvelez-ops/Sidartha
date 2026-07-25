@@ -130,11 +130,15 @@ ${js}
   const outFile = path.join(OUT_DIR, 'index.html');
   fs.writeFileSync(outFile, page);
 
-  const externals = [...new Set(page.match(/https?:\/\/[a-z0-9.-]+/gi) || [])].filter(
-    (h) => !/w3\.org|reactjs\.org/.test(h)
-  );
+  /* Solo interesan las URLs que el navegador *pediría* (y que el CSP
+     bloquearía). Los href de <a> apuntan a Instagram o Facebook a propósito:
+     son destinos de navegación, no recursos, y deben quedarse. */
+  const fetched = [
+    ...page.matchAll(/(?:url\(\s*["']?|@import\s*["']|<link[^>]+href=["']|\ssrc=["'])(https?:\/\/[^"')\s]+)/gi),
+  ].map((m) => m[1]);
+  const externals = [...new Set(fetched)];
   if (externals.length) {
-    console.warn('  aviso: quedan referencias externas →', externals.join(', '));
+    console.warn('  aviso: quedan recursos externos →', externals.join(', '));
   }
 
   console.log(`  escrito ${path.relative(ROOT, outFile)} (${(page.length / 1024).toFixed(0)} KB)`);

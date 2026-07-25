@@ -20,6 +20,20 @@ img {
   display: block;
 }
 
+/* ---------- foco visible ----------
+ * El kit no definía ninguno, así que el recorrido con teclado era invisible
+ * en cuanto un estilo pisaba el outline del navegador. Se usa :focus-visible
+ * para no dibujar el anillo en los clics de ratón. */
+:focus-visible {
+  outline: 2px solid var(--teal-500);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+/* Sobre el footer navy el teal pierde contraste: allí el anillo va en blanco. */
+footer :focus-visible {
+  outline-color: #fff;
+}
+
 /* ---------- scroll progress ---------- */
 .prog {
   position: fixed;
@@ -459,6 +473,12 @@ body.cursor-on .cursor-ring {
 }
 .nlinput:focus {
   border-color: var(--teal-400);
+}
+/* .nlinput fija outline:none y, a igual especificidad, gana por ir después
+   que la regla global de :focus-visible. Hay que devolverlo aquí. */
+.nlinput:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 .nlinput::placeholder {
   color: rgba(255, 255, 255, 0.45);

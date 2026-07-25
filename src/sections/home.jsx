@@ -12,7 +12,7 @@ import Icon from '../components/Icon.jsx';
 import { Marquee, Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
 import { Input, Textarea, Button } from '../components/ui.jsx';
 import { submitForm } from '../lib/forms.js';
-import { WRAP, MARK, HORIZ_LIGHT, PROJECTS, STATS, CLIENTS, FOUNDERS, LEGAL } from '../data/site.js';
+import { WRAP, MARK, HORIZ_LIGHT, PROJECTS, STATS, CLIENTS, FOUNDERS, LEGAL, SOCIAL } from '../data/site.js';
 
 /* ---------- pinned horizontal gallery ---------- */
 export function Portfolio() {
@@ -619,11 +619,13 @@ export function Footer({ onLegal }) {
             Sabemos contar historias.
           </p>
           <div style={{ display: 'flex', gap: 12 }}>
-            {['instagram', 'facebook', 'globe'].map((ic) => (
+            {SOCIAL.filter((s) => s.href).map((s) => (
               <a
-                key={ic}
-                href="#top"
-                aria-label={ic}
+                key={s.icon}
+                href={s.href}
+                aria-label={s.label}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   width: 40,
                   height: 40,
@@ -635,7 +637,7 @@ export function Footer({ onLegal }) {
                   color: '#fff',
                 }}
               >
-                <Icon name={ic} size={18} />
+                <Icon name={s.icon} size={18} />
               </a>
             ))}
           </div>
