@@ -12,7 +12,21 @@ import Icon from '../components/Icon.jsx';
 import { Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
 import { Input, Textarea, Button } from '../components/ui.jsx';
 import { submitForm } from '../lib/forms.js';
-import { WRAP, MARK, HORIZ_LIGHT, PROJECTS, PHOTOS, STATS, CLIENTS, FOUNDERS, LEGAL, SOCIAL } from '../data/site.js';
+import {
+  WRAP,
+  MARK,
+  HORIZ_LIGHT,
+  PROJECTS,
+  PHOTOS,
+  STATS,
+  CLIENTS,
+  FOUNDERS,
+  LEGAL,
+  SOCIAL,
+  ORIGINALS_INTRO,
+  ORIGINALS_FORMATS,
+  ORIGINALS_COLLECTIONS,
+} from '../data/site.js';
 
 export function Portfolio() {
   return (
@@ -226,6 +240,126 @@ export function BudhAi() {
           <a href="#contacto" className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
             Conversa con budh.ai <Icon name="arrow-up-right" size={18} />
           </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Sidartha Originals ----------
+ * La línea editorial propia. Fondo negro cine (no navy) para separarla del
+ * sitio corporativo, tal como pide la guía: más inmersiva y cinematográfica,
+ * con el teal algo más presente pero sin competir con las imágenes. */
+export function Originals() {
+  return (
+    <section
+      id="originals"
+      style={{ background: 'var(--black-cinema)', color: '#fff', padding: '120px 0', position: 'relative', overflow: 'hidden' }}
+    >
+      <div className="pat" style={{ position: 'absolute', inset: 0, opacity: 0.04 }} />
+
+      <div style={{ ...WRAP, position: 'relative' }}>
+        <div className="orig-head">
+          <div>
+            <div className="orig-lockup">
+              <span className="orig-lockup-a">Sidartha</span>
+              <span className="orig-lockup-b">Originals</span>
+            </div>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 300,
+                fontSize: 'clamp(30px,3.6vw,50px)',
+                letterSpacing: '-.025em',
+                lineHeight: 1.1,
+                margin: '26px 0 0',
+                color: '#fff',
+              }}
+            >
+              Historias propias con
+              <br />
+              mirada documental.
+            </h2>
+          </div>
+
+          <div>
+            <p
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 17.5,
+                lineHeight: 1.65,
+                color: 'rgba(255,255,255,.72)',
+                margin: '0 0 26px',
+                maxWidth: 480,
+              }}
+            >
+              {ORIGINALS_INTRO}
+            </p>
+            <ul style={{ listStyle: 'none', margin: '0 0 30px', padding: 0, display: 'grid', gap: 1 }}>
+              {ORIGINALS_FORMATS.map((f) => (
+                <li
+                  key={f.label}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 14,
+                    padding: '13px 0',
+                    borderTop: '1px solid rgba(255,255,255,.12)',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 15.5,
+                    color: 'rgba(255,255,255,.86)',
+                  }}
+                >
+                  <span style={{ color: 'var(--teal-400)', fontFamily: 'var(--font-display)', fontSize: 13, letterSpacing: '.1em' }}>
+                    {f.n}
+                  </span>
+                  {f.label}
+                </li>
+              ))}
+            </ul>
+            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+              <a href="#contacto" className="btnx btnx-primary" style={{ padding: '15px 28px', fontSize: 15 }}>
+                Presentar un proyecto <Icon name="arrow-right" size={17} />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 12,
+            letterSpacing: '.16em',
+            textTransform: 'uppercase',
+            color: 'rgba(255,255,255,.42)',
+            margin: '72px 0 22px',
+          }}
+        >
+          Colecciones editoriales
+        </p>
+
+        <div className="orig-grid">
+          {ORIGINALS_COLLECTIONS.map((c) => (
+            <div key={c.slug}>
+              <div className="orig-poster">
+                {/* label corto: el título va justo debajo, repetirlo dentro
+                    del póster lo duplicaba en pantalla y en lectores. */}
+                <ImageSlot src={c.poster} alt={c.title} shape="rect" label="Póster" dark />
+              </div>
+              <div
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 400,
+                  fontSize: 16,
+                  color: '#fff',
+                  marginTop: 12,
+                  lineHeight: 1.25,
+                }}
+              >
+                {c.title}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -567,6 +701,7 @@ export function Footer({ onLegal }) {
         ['Comunicación Integral', '#areas'],
         ['Producción Audiovisual', '#areas'],
         ['Network', '#areas'],
+        ['Sidartha Originals', '#originals'],
         ['budh.ai', '#budhai'],
       ],
     },

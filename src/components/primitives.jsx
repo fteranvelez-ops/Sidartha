@@ -55,7 +55,7 @@ export function ImageSlot({ src, alt = '', label, shape = 'rounded', radius = 12
 
   if (src) {
     return (
-      <div className="islot" style={{ borderRadius }}>
+      <div className="islot islot--filled" style={{ borderRadius }}>
         <img src={src} alt={alt} loading="lazy" />
       </div>
     );

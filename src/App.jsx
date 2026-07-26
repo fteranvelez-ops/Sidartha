@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import Icon from './components/Icon.jsx';
 import useMotion from './lib/useMotion.js';
 import { Nav, Hero, KineticMarquee, About, Fundamentos, Statement, Departments, Process } from './sections/parts.jsx';
-import { Portfolio, Stats, BudhAi, Trust, Manifesto, Contacto, CallCTA, Footer, LegalModal } from './sections/home.jsx';
+import { Portfolio, Stats, Originals, BudhAi, Trust, Manifesto, Contacto, CallCTA, Footer, LegalModal } from './sections/home.jsx';
 
 export default function App() {
   const topRef = useRef(null);
@@ -23,6 +23,7 @@ export default function App() {
       <Process />
       <Portfolio />
       <Stats />
+      <Originals />
       <BudhAi />
       <Trust />
       <Manifesto />

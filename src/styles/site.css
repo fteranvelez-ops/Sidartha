@@ -304,6 +304,47 @@ footer :focus-visible {
   white-space: nowrap;
 }
 
+/* ---------- Sidartha Originals ---------- */
+.orig-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+/* Lockup en dos líneas, como pide la guía. El peso ligero sobre el negro
+   cine es lo que le da el aire de cabecera de film. */
+.orig-lockup {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.94;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+.orig-lockup-a {
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: 0.12em;
+  color: #fff;
+}
+.orig-lockup-b {
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: 0.12em;
+  color: var(--teal-500);
+}
+.orig-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+}
+/* Poster 2:3, la proporción de cartel de la guía. */
+.orig-poster {
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--black-deep);
+}
+
 /* ---------- forms / footer / legal ---------- */
 .fchip {
   font-family: var(--font-body);
@@ -491,6 +532,12 @@ footer :focus-visible {
   background: var(--navy-700);
   color: rgba(255, 255, 255, 0.62);
 }
+/* El padding y el fondo existen para el texto del placeholder. Con una foto
+   real dentro dibujaban un marco claro alrededor de la imagen. */
+.islot--filled {
+  padding: 0;
+  background: none;
+}
 .islot > img {
   width: 100%;
   height: 100%;
@@ -540,5 +587,17 @@ footer :focus-visible {
   }
   .launcher-label {
     display: none;
+  }
+  .orig-head {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 36px !important;
+  }
+  .orig-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 901px) and (max-width: 1200px) {
+  .orig-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

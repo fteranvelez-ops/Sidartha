@@ -19,6 +19,7 @@ export function Nav() {
     { label: 'Nosotros', href: '#nosotros' },
     { label: 'Áreas', href: '#areas' },
     { label: 'Trabajo', href: '#trabajo' },
+    { label: 'Originals', href: '#originals' },
     { label: 'budh.ai', href: '#budhai' },
   ];
   return (

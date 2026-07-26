@@ -44,9 +44,11 @@ const dataUri = (file) => {
   return `data:${mime};base64,${fs.readFileSync(file).toString('base64')}`;
 };
 
-/* Reescribe las rutas /assets/… que Vite deja en el CSS y el JS. */
+/* Reescribe las rutas /assets/… que Vite deja en el CSS y el JS.
+   Cubre cualquier subcarpeta: al añadir /assets/originals/ una lista fija
+   de carpetas habría dejado esas imágenes fuera del bundle sin avisar. */
 const inlineAssetRefs = (text) =>
-  text.replace(/\/assets\/(?:logos|photography)\/[A-Za-z0-9._-]+/g, (ref) => {
+  text.replace(/\/assets\/[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+/g, (ref) => {
     const file = path.join(DIST, ref.slice(1));
     return fs.existsSync(file) ? dataUri(file) : ref;
   });

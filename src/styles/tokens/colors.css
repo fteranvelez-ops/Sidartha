@@ -3,6 +3,9 @@
 --navy-900:#26313B;--navy-800:#2F3D48;--navy-700:#3D5060;--navy-600:#54697A;--navy-500:#71879A;
 --gray-50:#FAFBFC;--gray-100:#F2F4F6;--gray-200:#E6E9EC;--gray-300:#D4D9DD;--gray-400:#AEB6BD;--gray-500:#899299;
 --white:#FFFFFF;
+/* Cinema blacks — Sidartha Originals only. Deeper than navy-900 so the
+   editorial line reads as a screening room rather than a corporate page. */
+--black-cinema:#07111C;--black-deep:#03080E;
 --color-bg:var(--white);--color-surface:var(--gray-50);--color-surface-alt:var(--gray-100);
 --color-text-primary:var(--navy-800);--color-text-secondary:var(--navy-600);--color-text-muted:var(--gray-500);
 --color-text-on-dark:var(--white);--color-text-on-dark-muted:var(--teal-200);

@@ -85,6 +85,47 @@ export const PHOTOS = {
   budhaiRetrato: { img: null, label: 'Retrato budh.ai', alt: 'budh.ai' },
 };
 
+/*
+ * Sidartha Originals — la línea editorial propia (cortos, series y
+ * largometrajes documentales).
+ *
+ * No hay títulos aquí a propósito. El catálogo real todavía no está
+ * definido y la guía de diseño es explícita: no inventar obras, cifras ni
+ * créditos. Lo que sí es real son las líneas editoriales, así que la
+ * sección se construye sobre ellas y cada póster queda como placeholder
+ * etiquetado hasta que llegue el arte.
+ *
+ * Cuando existan los títulos, cada colección puede recibir una lista
+ * `titulos` siguiendo el modelo de contenido de la guía (§24).
+ */
+export const ORIGINALS_INTRO =
+  'Sidartha Originals es la casa de nuestros cortos, series y largometrajes documentales: historias concebidas, filmadas y producidas desde una mirada propia.';
+
+export const ORIGINALS_FORMATS = [
+  { label: 'Series documentales', n: '01' },
+  { label: 'Cortos', n: '02' },
+  { label: 'Largometrajes', n: '03' },
+  { label: 'En desarrollo', n: '04' },
+];
+
+/*
+ * Colecciones editoriales. `poster` en null → placeholder etiquetado.
+ *
+ * Los pósters son arte abstracto de relleno: textura, luz y grano, sin
+ * personas, lugares reconocibles ni texto. Son deliberadamente NO
+ * documentales, porque una foto documental inventada de una comunidad o un
+ * proyecto real sería una afirmación falsa — justo lo que la guía prohíbe.
+ * Sustituir por fotogramas reales en cuanto existan los títulos.
+ */
+export const ORIGINALS_COLLECTIONS = [
+  { slug: 'territorio-y-memoria', title: 'Territorio y memoria', poster: '/assets/originals/territorio-y-memoria.webp' },
+  { slug: 'mujeres-que-transforman', title: 'Mujeres que transforman', poster: '/assets/originals/mujeres-que-transforman.webp' },
+  { slug: 'agua-y-ambiente', title: 'Agua y ambiente', poster: '/assets/originals/agua-y-ambiente.webp' },
+  { slug: 'juventudes', title: 'Juventudes', poster: '/assets/originals/juventudes.webp' },
+  { slug: 'pueblos-y-culturas', title: 'Pueblos y culturas', poster: '/assets/originals/pueblos-y-culturas.webp' },
+  { slug: 'derechos', title: 'Derechos', poster: null },
+];
+
 export const STATS = [
   { k: '20+', v: 'Años de trayectoria' },
   { k: '360°', v: 'Comunicación integral' },
