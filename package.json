@@ -7,14 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "bundle": "npm run build && node tools/bundle-singlefile.mjs",
+    "bundle": "VITE_HASH_ROUTER=1 npm run build && node tools/bundle-singlefile.mjs",
     "deploy": "npm run build && npx --yes firebase-tools deploy --only hosting",
     "deploy:preview": "npm run build && npx --yes firebase-tools hosting:channel:deploy preview"
   },
   "dependencies": {
     "lucide-react": "^1.26.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",

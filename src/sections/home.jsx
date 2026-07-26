@@ -7,9 +7,13 @@
  *  - the budh.ai CTA scrolls to its section, since the separate budh-ai kit
  *    is not part of this build.
  */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import { Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
+import Rail from '../components/Rail.jsx';
+import Reveal from '../components/Reveal.jsx';
+import { ROUTES, LEGAL_LINKS } from '../routes.js';
 import { Input, Textarea, Button } from '../components/ui.jsx';
 import { submitForm } from '../lib/forms.js';
 import {
@@ -28,87 +32,86 @@ import {
   ORIGINALS_COLLECTIONS,
 } from '../data/site.js';
 
-export function Portfolio() {
+/* Agrupa los proyectos por categoría para armar un carrusel por cada una.
+   Las categorías con una sola pieza no sostienen una fila propia, así que
+   caen juntas en «Otros formatos»; con esto la sección se reordena sola
+   cuando entren proyectos nuevos, sin tocar el componente. */
+function projectRails(projects) {
+  const byCat = new Map();
+  projects.forEach((p) => {
+    if (!byCat.has(p.cat)) byCat.set(p.cat, []);
+    byCat.get(p.cat).push(p);
+  });
+
+  /* Una primera fila con todo el catálogo: es la que da la medida del
+     volumen de trabajo, y al desbordar deja claro que las filas se
+     recorren en horizontal antes de llegar a las de categoría. */
+  const rails = [{ key: 'todos', title: 'Todos los trabajos', items: projects }];
+  const leftovers = [];
+  byCat.forEach((items, cat) => {
+    if (items.length >= 2) rails.push({ key: cat, title: cat, items });
+    else leftovers.push(...items);
+  });
+  if (leftovers.length) rails.push({ key: 'otros', title: 'Otros formatos', items: leftovers });
+  return rails;
+}
+
+/* `as` decide el nivel del titular. En su propia página este bloque es el
+   encabezado principal y va como h1; incrustado en la portada es una
+   sección más y va como h2. Sin esto, /trabajo se quedaba sin h1. */
+export function Portfolio({ as: Heading = 'h2' }) {
+  const featured = PROJECTS[0];
+  const rails = projectRails(PROJECTS);
+
   return (
-    <section id="trabajo" style={{ background: 'var(--white)', borderTop: '1px solid var(--color-border)' }}>
-      <div style={{ ...WRAP, paddingTop: 100, paddingBottom: 44 }}>
-        <div
-          className="reveal"
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}
-        >
-          <div>
-            <Eyebrow n="05">Portafolio</Eyebrow>
-            <MaskHead
-              lines={['Nuestros últimos trabajos']}
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 300,
-                fontSize: 'clamp(32px,4vw,52px)',
-                color: 'var(--navy-900)',
-                margin: '18px 0 0',
-                letterSpacing: '-.025em',
-              }}
-            />
-          </div>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--color-text-muted)', maxWidth: 320 }}>
-            Una selección de proyectos recientes.
+    <section id="trabajo" className="port">
+      <div className="port-billboard">
+        <div className="port-billboard-art">
+          <ImageSlot src={featured.img} alt="" shape="rect" label={featured.title} dark />
+        </div>
+        <div className="port-billboard-scrim" />
+
+        <div className="port-billboard-inner" style={{ ...WRAP }}>
+          <Eyebrow n="05" light>
+            Portafolio
+          </Eyebrow>
+          <Heading className="port-billboard-title">Nuestros últimos trabajos</Heading>
+          <p className="port-billboard-copy">
+            Documentales, campañas 360° y eventos para instituciones, ONGs y marcas. Explora por formato.
           </p>
+          <div className="port-billboard-cta">
+            <Link to={ROUTES.contacto} className="btnx btnx-primary" style={{ padding: '15px 28px', fontSize: 15 }}>
+              Escríbenos <Icon name="arrow-right" size={17} />
+            </Link>
+            <Link to={ROUTES.originals} className="btnx btnx-glass" style={{ padding: '15px 28px', fontSize: 15 }}>
+              <Icon name="info" size={17} /> Sidartha Originals
+            </Link>
+          </div>
         </div>
       </div>
 
-      <div className="port-grid" style={{ ...WRAP, paddingBottom: 100 }}>
-        {PROJECTS.map((p) => (
-          <div key={p.id} className="pcell">
-            <div className="pimg">
-              <ImageSlot src={p.img} alt={p.title} shape="rect" label={p.title} dark />
-            </div>
-            <div className="pscrim" />
-            <div className="pmeta">
-              <div>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 12,
-                    letterSpacing: '.12em',
-                    textTransform: 'uppercase',
-                    color: 'var(--teal-300)',
-                    fontWeight: 600,
-                    marginBottom: 7,
-                  }}
-                >
-                  {p.cat}
-                </div>
-                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 22, color: '#fff', lineHeight: 1.12 }}>
-                  {p.title}
-                </div>
-              </div>
-              <span className="parrow">
-                <Icon name="arrow-up-right" size={20} />
-              </span>
-            </div>
-          </div>
+      <div className="port-rails">
+        {rails.map((r) => (
+          <Rail key={r.key} id={`port-${r.key}`} title={r.title}>
+            {r.items.map((p) => (
+              <article key={p.id} className="card card--wide">
+                {/* Todavía no hay ficha por proyecto, así que la tarjeta lleva
+                    al contacto. El aria-label lo dice: si no, un lector de
+                    pantalla anuncia catorce enlaces distintos que van al
+                    mismo sitio sin explicar por qué. */}
+                <Link className="card-link" to={ROUTES.contacto} aria-label={`${p.title} — escríbenos para ver este trabajo`}>
+                  <div className="card-art">
+                    {/* Etiqueta corta: el título va justo debajo de la ficha y
+                        repetirlo dentro lo duplicaba en pantalla. */}
+                    <ImageSlot src={p.img} alt="" shape="rect" label="Imagen" dark />
+                  </div>
+                  <h4 className="card-title">{p.title}</h4>
+                  <p className="card-meta">{p.cat}</p>
+                </Link>
+              </article>
+            ))}
+          </Rail>
         ))}
-
-        <div className="pcell" style={{ background: 'var(--navy-900)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ textAlign: 'center', padding: 30 }}>
-            <img src={MARK} alt="" style={{ width: 74, margin: '0 auto 20px', opacity: 0.9 }} />
-            <div
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 300,
-                fontSize: 25,
-                color: '#fff',
-                marginBottom: 18,
-                lineHeight: 1.2,
-              }}
-            >
-              ¿Vemos el portafolio completo?
-            </div>
-            <a href="#contacto" className="btnx btnx-light" style={{ padding: '13px 26px', fontSize: 15 }}>
-              Escríbenos <Icon name="arrow-right" size={16} />
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -144,7 +147,7 @@ export function Stats() {
 }
 
 /* ---------- budh.ai band ---------- */
-export function BudhAi() {
+export function BudhAi({ as = 'h2' }) {
   return (
     <section id="budhai" style={{ background: 'var(--navy-900)', color: '#fff', padding: '110px 0', position: 'relative', overflow: 'hidden' }}>
       <div className="pat" style={{ position: 'absolute', inset: 0, opacity: 0.05 }} />
@@ -179,6 +182,7 @@ export function BudhAi() {
             </Eyebrow>
           </div>
           <MaskHead
+            tag={as}
             lines={['No resuelve rápido.', 'Pregunta primero.']}
             style={{
               fontFamily: 'var(--font-display)',
@@ -237,9 +241,9 @@ export function BudhAi() {
 
           {/* The kit linked to ../budh-ai/index.html — a separate UI kit that is
               not part of this build. Points at the contact form until it ships. */}
-          <a href="#contacto" className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
+          <Link to={ROUTES.contacto} className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
             Conversa con budh.ai <Icon name="arrow-up-right" size={18} />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
@@ -247,120 +251,81 @@ export function BudhAi() {
 }
 
 /* ---------- Sidartha Originals ----------
- * La línea editorial propia. Fondo negro cine (no navy) para separarla del
- * sitio corporativo, tal como pide la guía: más inmersiva y cinematográfica,
- * con el teal algo más presente pero sin competir con las imágenes. */
-export function Originals() {
+ * La línea editorial propia, presentada como un catálogo: un billboard
+ * destacado y carruseles de fichas. Fondo negro cine (no navy) para
+ * separarla del sitio corporativo, como pide la guía.
+ *
+ * El billboard toma la primera colección que ya tiene póster. No se elige a
+ * mano para que siga funcionando cuando cambie el orden o lleguen pósters
+ * nuevos. */
+export function Originals({ as: Heading = 'h2' }) {
+  const featured = ORIGINALS_COLLECTIONS.find((c) => c.poster) || ORIGINALS_COLLECTIONS[0];
+
   return (
-    <section
-      id="originals"
-      style={{ background: 'var(--black-cinema)', color: '#fff', padding: '120px 0', position: 'relative', overflow: 'hidden' }}
-    >
-      <div className="pat" style={{ position: 'absolute', inset: 0, opacity: 0.04 }} />
+    <section id="originals" className="orig">
+      <div className="orig-billboard">
+        {featured.poster && (
+          <img className="orig-billboard-bg" src={featured.poster} alt="" aria-hidden="true" />
+        )}
+        <div className="orig-billboard-scrim" />
 
-      <div style={{ ...WRAP, position: 'relative' }}>
-        <div className="orig-head">
-          <div>
-            <div className="orig-lockup">
-              <span className="orig-lockup-a">Sidartha</span>
-              <span className="orig-lockup-b">Originals</span>
-            </div>
-            <h2
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 300,
-                fontSize: 'clamp(30px,3.6vw,50px)',
-                letterSpacing: '-.025em',
-                lineHeight: 1.1,
-                margin: '26px 0 0',
-                color: '#fff',
-              }}
-            >
-              Historias propias con
-              <br />
-              mirada documental.
-            </h2>
+        <div className="orig-billboard-inner" style={{ ...WRAP }}>
+          <div className="orig-lockup">
+            <span className="orig-lockup-a">Sidartha</span>
+            <span className="orig-lockup-b">Originals</span>
           </div>
 
-          <div>
-            <p
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 17.5,
-                lineHeight: 1.65,
-                color: 'rgba(255,255,255,.72)',
-                margin: '0 0 26px',
-                maxWidth: 480,
-              }}
-            >
-              {ORIGINALS_INTRO}
-            </p>
-            <ul style={{ listStyle: 'none', margin: '0 0 30px', padding: 0, display: 'grid', gap: 1 }}>
-              {ORIGINALS_FORMATS.map((f) => (
-                <li
-                  key={f.label}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 14,
-                    padding: '13px 0',
-                    borderTop: '1px solid rgba(255,255,255,.12)',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 15.5,
-                    color: 'rgba(255,255,255,.86)',
-                  }}
-                >
-                  <span style={{ color: 'var(--teal-400)', fontFamily: 'var(--font-display)', fontSize: 13, letterSpacing: '.1em' }}>
-                    {f.n}
-                  </span>
-                  {f.label}
-                </li>
-              ))}
-            </ul>
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-              <a href="#contacto" className="btnx btnx-primary" style={{ padding: '15px 28px', fontSize: 15 }}>
-                Presentar un proyecto <Icon name="arrow-right" size={17} />
-              </a>
-            </div>
+          <Heading className="orig-billboard-title">
+            Historias propias con
+            <br />
+            mirada documental.
+          </Heading>
+
+          <p className="orig-billboard-copy">{ORIGINALS_INTRO}</p>
+
+          <ul className="orig-formats">
+            {ORIGINALS_FORMATS.map((f) => (
+              <li key={f.label}>
+                <span className="orig-formats-n">{f.n}</span>
+                {f.label}
+              </li>
+            ))}
+          </ul>
+
+          <div className="orig-billboard-cta">
+            <Link to={ROUTES.contacto} className="btnx btnx-light" style={{ padding: '15px 28px', fontSize: 15 }}>
+              <Icon name="arrow-right" size={17} /> Presentar un proyecto
+            </Link>
+            <Link to={ROUTES.trabajo} className="btnx btnx-glass" style={{ padding: '15px 28px', fontSize: 15 }}>
+              <Icon name="info" size={17} /> Ver el trabajo
+            </Link>
           </div>
         </div>
+      </div>
 
-        <p
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: 12,
-            letterSpacing: '.16em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,.42)',
-            margin: '72px 0 22px',
-          }}
+      {/* Sin WRAP inline: su `padding: 0 40px` es un atajo que pone el padding
+          vertical a 0 y, al ser inline, gana siempre. El ancho y el aire los
+          define .orig-rails en el CSS. */}
+      <div className="orig-rails">
+        <Rail
+          id="orig-colecciones"
+          title="Colecciones editoriales"
+          subtitle="Las líneas temáticas que articulan el catálogo."
         >
-          Colecciones editoriales
-        </p>
-
-        <div className="orig-grid">
           {ORIGINALS_COLLECTIONS.map((c) => (
-            <div key={c.slug}>
-              <div className="orig-poster">
-                {/* label corto: el título va justo debajo, repetirlo dentro
-                    del póster lo duplicaba en pantalla y en lectores. */}
-                <ImageSlot src={c.poster} alt={c.title} shape="rect" label="Póster" dark />
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 400,
-                  fontSize: 16,
-                  color: '#fff',
-                  marginTop: 12,
-                  lineHeight: 1.25,
-                }}
-              >
-                {c.title}
-              </div>
-            </div>
+            <article key={c.slug} className="card card--poster">
+              <Link className="card-link" to={ROUTES.contacto} aria-label={`${c.title} — escríbenos sobre esta colección`}>
+                <div className="card-art">
+                  {/* El título va debajo de la ficha: repetirlo dentro del
+                      póster lo duplicaba en pantalla y en lectores. */}
+                  <ImageSlot src={c.poster} alt="" shape="rect" label="Póster" dark />
+                </div>
+                <h4 className="card-title">{c.title}</h4>
+                <p className="card-meta">Colección</p>
+              </Link>
+            </article>
           ))}
-        </div>
+        </Rail>
       </div>
     </section>
   );
@@ -630,9 +595,9 @@ export function CallCTA() {
             Agenda 30 minutos con nuestro equipo — hablarás directamente con nosotros.
           </p>
         </div>
-        <a href="#contacto" className="btnx btnx-primary" style={{ padding: '18px 34px', fontSize: 17 }}>
+        <Link to={ROUTES.contacto} className="btnx btnx-primary" style={{ padding: '18px 34px', fontSize: 17 }}>
           <Icon name="calendar-days" size={19} /> Agenda una llamada
-        </a>
+        </Link>
       </div>
     </section>
   );
@@ -683,26 +648,26 @@ function Newsletter() {
   );
 }
 
-export function Footer({ onLegal }) {
+export function Footer() {
   const cols = [
     {
       h: 'Explorar',
       links: [
-        ['Inicio', '#top'],
-        ['Nosotros', '#nosotros'],
-        ['Áreas', '#areas'],
-        ['Trabajo', '#trabajo'],
-        ['Contacto', '#contacto'],
+        ['Inicio', ROUTES.home],
+        ['Nosotros', ROUTES.nosotros],
+        ['Áreas', ROUTES.areas],
+        ['Trabajo', ROUTES.trabajo],
+        ['Contacto', ROUTES.contacto],
       ],
     },
     {
       h: 'Servicios',
       links: [
-        ['Comunicación Integral', '#areas'],
-        ['Producción Audiovisual', '#areas'],
-        ['Network', '#areas'],
-        ['Sidartha Originals', '#originals'],
-        ['budh.ai', '#budhai'],
+        ['Comunicación Integral', ROUTES.areas],
+        ['Producción Audiovisual', ROUTES.areas],
+        ['Network', ROUTES.areas],
+        ['Sidartha Originals', ROUTES.originals],
+        ['budh.ai', ROUTES.budhai],
       ],
     },
   ];
@@ -760,9 +725,9 @@ export function Footer({ onLegal }) {
               {col.h}
             </div>
             {col.links.map(([l, h]) => (
-              <a key={l} href={h} style={{ display: 'block', color: 'var(--teal-200)', textDecoration: 'none', fontSize: 15, marginBottom: 11 }}>
+              <Link key={l} to={h} style={{ display: 'block', color: 'var(--teal-200)', textDecoration: 'none', fontSize: 15, marginBottom: 11 }}>
                 {l}
-              </a>
+              </Link>
             ))}
           </div>
         ))}
@@ -813,67 +778,14 @@ export function Footer({ onLegal }) {
         >
           <span>© {new Date().getFullYear()} Sidartha Comunicación · Todos los derechos reservados</span>
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-            {Object.keys(LEGAL).map((k) => (
-              <button key={k} className="flink" onClick={() => onLegal(k)}>
-                {LEGAL[k].label}
-              </button>
+            {LEGAL_LINKS.map((l) => (
+              <Link key={l.to} className="flink" to={l.to}>
+                {l.label}
+              </Link>
             ))}
           </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-export function LegalModal({ tab, setTab, onClose }) {
-  useEffect(() => {
-    const esc = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', esc);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', esc);
-      document.body.style.overflow = '';
-    };
-  }, [onClose]);
-
-  return (
-    <div className="lm-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label={LEGAL[tab].label}>
-      <div className="lm-panel" onClick={(e) => e.stopPropagation()}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '24px 34px 16px' }}>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {Object.keys(LEGAL).map((k) => (
-              <button key={k} className={'lm-tab' + (k === tab ? ' on' : '')} onClick={() => setTab(k)}>
-                {LEGAL[k].label}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Cerrar"
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: '50%',
-              border: '1px solid var(--color-border)',
-              background: '#fff',
-              color: 'var(--navy-800)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              flexShrink: 0,
-            }}
-          >
-            <Icon name="x" size={18} />
-          </button>
-        </div>
-        <div className="lm-body">
-          <h4 style={{ marginTop: 0 }}>{LEGAL[tab].label}</h4>
-          {LEGAL[tab].body.map((row, i) => (row[0] === 'h' ? <h4 key={i}>{row[1]}</h4> : <p key={i}>{row[1]}</p>))}
-        </div>
-      </div>
-    </div>
   );
 }

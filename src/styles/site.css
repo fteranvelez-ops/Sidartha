@@ -25,6 +25,56 @@ img {
   display: block;
 }
 
+/* ---------- animación de entrada ----------
+ * Un solo gesto para todo el sitio: el bloque sube 18px y aparece. Corto
+ * (450ms) y con una curva que desacelera, para que se lea como que el
+ * contenido «asienta» y no como una transición de presentación.
+ *
+ * El kit original encadenaba cinco efectos distintos; esto es a propósito
+ * lo contrario. */
+.rv {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 0.68, 0.28, 1);
+}
+.rv-in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Enlace de salto, visible solo al tabular. Sin él, quien navega con
+   teclado atraviesa la barra entera en cada página. */
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 100;
+  background: var(--navy-900);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 0 0 10px 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  text-decoration: none;
+  transition: top 0.18s ease;
+}
+.skip:focus {
+  top: 0;
+  color: #fff;
+  text-decoration: none;
+}
+/* El <main> recibe el foco al cambiar de ruta; no debe dibujar contorno. */
+main:focus {
+  outline: none;
+}
+
 /* ---------- foco visible ----------
  * El kit no definía ninguno, así que el recorrido con teclado era invisible
  * en cuanto un estilo pisaba el outline del navegador. Se usa :focus-visible
@@ -101,16 +151,24 @@ footer :focus-visible {
   color: var(--navy-900);
 }
 
-/* ---------- reveals ----------
- * The kit staged these in on scroll (fade+slide, a line-mask heading wipe,
- * an image clip reveal). Neutralized here to their end state so content is
- * present immediately — the classNames stay on the markup as styling hooks,
- * they just no longer animate. */
-.reveal {
-  opacity: 1;
-}
+/* ---------- ganchos heredados del kit ----------
+ * .reveal y .stag siguen puestos en cientos de bloques del kit original.
+ * En vez de editarlos uno a uno, se reconectan aquí a la misma animación
+ * que usa <Reveal>: mismo gesto, misma duración, un solo lenguaje.
+ *
+ * .mask y .clipr se quedan neutralizados: eran el barrido por línea y el
+ * recorte de imagen, los dos efectos que hacían que «pasaran demasiadas
+ * cosas» a la vez. */
+.reveal,
 .stag > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 0.68, 0.28, 1);
+}
+.reveal.in,
+.stag.in > * {
   opacity: 1;
+  transform: none;
 }
 .mask {
   display: block;
@@ -120,6 +178,14 @@ footer :focus-visible {
 }
 .clipr {
   clip-path: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .stag > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ---------- kinetic type ----------
@@ -205,60 +271,285 @@ footer :focus-visible {
   background: var(--color-surface);
 }
 
-/* ---------- portfolio grid ----------
- * Was a scroll-jacked, pinned horizontal gallery. Now a plain responsive
- * grid that scrolls with the rest of the page. */
-.port-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-.pcell {
+/* ============================================================
+   CATÁLOGO — billboard + carruseles
+   El lenguaje compartido por Portafolio y Originals: una pieza
+   destacada a sangre y, debajo, filas de fichas que se recorren
+   en horizontal.
+
+   Sobre el movimiento: el sitio no anima nada por su cuenta. Lo
+   que hay aquí responde al puntero o al foco (elevar una ficha,
+   revelar su carátula) y desaparece bajo prefers-reduced-motion.
+   ============================================================ */
+
+/* ---------- billboard ---------- */
+.orig-billboard,
+.port-billboard {
   position: relative;
-  border-radius: 22px;
-  overflow: hidden;
-  background: var(--navy-800);
-  aspect-ratio: 4 / 5;
-}
-.pcell .pimg {
-  position: absolute;
-  inset: 0;
-}
-.pcell .pscrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 45%, rgba(20, 26, 32, 0.72));
-  pointer-events: none;
-}
-.pcell .pmeta {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 28px;
-  pointer-events: none;
+  min-height: min(78vh, 660px);
   display: flex;
-  justify-content: space-between;
   align-items: flex-end;
-  gap: 16px;
+  overflow: hidden;
+  isolation: isolate;
 }
-.pcell .parrow {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: var(--teal-500);
+.orig-billboard-bg,
+.port-billboard-art {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+.orig-billboard-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* El póster es arte vertical; desenfocarlo y oscurecerlo lo convierte en
+     un fondo ambiental en vez de una imagen recortada a la fuerza. */
+  filter: blur(26px) saturate(1.15) brightness(0.55);
+  transform: scale(1.12);
+}
+.orig-billboard-scrim,
+.port-billboard-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, var(--black-deep) 8%, rgba(3, 8, 14, 0.82) 42%, rgba(3, 8, 14, 0.35) 78%),
+    linear-gradient(0deg, var(--black-deep) 2%, transparent 55%);
+}
+.port-billboard-scrim {
+  background:
+    linear-gradient(90deg, var(--navy-900) 8%, rgba(38, 49, 59, 0.86) 44%, rgba(38, 49, 59, 0.42) 80%),
+    linear-gradient(0deg, var(--navy-900) 2%, transparent 58%);
+}
+.orig-billboard-inner,
+.port-billboard-inner {
+  position: relative;
+  padding-top: 96px;
+  padding-bottom: 64px;
+  max-width: 1240px;
+  width: 100%;
+}
+.orig-billboard-title,
+.port-billboard-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(34px, 4.6vw, 62px);
+  letter-spacing: -0.028em;
+  line-height: 1.06;
   color: #fff;
+  margin: 24px 0 0;
+  max-width: 16ch;
+}
+.orig-billboard-copy,
+.port-billboard-copy {
+  font-family: var(--font-body);
+  font-size: 17.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.76);
+  margin: 20px 0 0;
+  max-width: 52ch;
+}
+.orig-billboard-cta,
+.port-billboard-cta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+/* Botón traslúcido sobre imagen — el ghost oscuro desaparecía sobre el
+   billboard, y el sólido competía con la llamada principal. */
+.btnx-glass {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(8px);
+}
+.btnx-glass:hover {
+  background: rgba(255, 255, 255, 0.24);
+  color: #fff;
+}
+
+.orig-formats {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.orig-formats li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+}
+.orig-formats-n {
+  color: var(--teal-400);
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+/* ---------- rails ---------- */
+.orig-rails,
+.port-rails {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+  padding: 64px 40px 96px;
+}
+.rail-head {
+  margin-bottom: 16px;
+}
+.rail-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(18px, 1.6vw, 23px);
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: inherit;
+}
+.rail-sub {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  margin: 6px 0 0;
+  opacity: 0.62;
+}
+.rail-body {
+  position: relative;
+}
+.rail-scroller {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  /* Sangra hasta el borde del viewport y devuelve el margen con padding, para
+     que la fila se lea como un carrusel continuo y no como una caja cortada. */
+  margin-inline: calc(-1 * var(--rail-bleed, 40px));
+  padding-inline: var(--rail-bleed, 40px);
+  /* Sin esto el snap mide desde el borde del scroller, ignora el padding y
+     deja la fila arrancada en scrollLeft = bleed, con la primera ficha
+     cortada al cargar. */
+  scroll-padding-inline: var(--rail-bleed, 40px);
+  /* Deja aire arriba y abajo: la ficha crece al enfocarse y el
+     desbordamiento quedaría recortado por el propio scroller. */
+  padding-block: 10px;
+  scrollbar-width: none;
+}
+.rail-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.rail-arrow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(90deg, rgba(3, 8, 14, 0.86), rgba(3, 8, 14, 0));
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease, transform 0.4s var(--ease-standard);
+  transition: opacity 0.25s ease;
 }
-.pcell:hover .parrow {
+.rail-arrow--prev {
+  left: calc(-1 * var(--rail-bleed, 40px));
+}
+.rail-arrow--next {
+  right: calc(-1 * var(--rail-bleed, 40px));
+  background: linear-gradient(270deg, rgba(3, 8, 14, 0.86), rgba(3, 8, 14, 0));
+}
+.rail-body:hover .rail-arrow {
   opacity: 1;
-  transform: none;
+}
+.rail-arrow[disabled] {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+/* Sin puntero fino no hay hover que las revele, y el dedo ya arrastra la
+   fila: las flechas sobrarían y taparían las fichas de los extremos. */
+@media (hover: none), (pointer: coarse) {
+  .rail-arrow {
+    display: none;
+  }
+}
+
+/* ---------- fichas ---------- */
+.card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+.card--poster {
+  width: clamp(150px, 15vw, 200px);
+}
+.card--wide {
+  width: clamp(240px, 24vw, 320px);
+}
+.card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 14px;
+  transition: transform 0.28s var(--ease-standard);
+}
+.card-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+.card-art {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--navy-800);
+  box-shadow: 0 4px 18px rgba(3, 8, 14, 0.4);
+  transition: box-shadow 0.28s ease, outline-color 0.2s ease;
+  outline: 1px solid rgba(255, 255, 255, 0.08);
+  outline-offset: -1px;
+}
+.card--poster .card-art {
+  aspect-ratio: 2 / 3;
+}
+.card--wide .card-art {
+  aspect-ratio: 16 / 10;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 15.5px;
+  line-height: 1.28;
+  margin: 12px 0 0;
+  color: inherit;
+}
+.card-meta {
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 5px 0 0;
+  opacity: 0.55;
+}
+@media (hover: hover) and (pointer: fine) {
+  .card-link:hover,
+  .card-link:focus-visible {
+    transform: translateY(-6px) scale(1.03);
+  }
+  .card-link:hover .card-art,
+  .card-link:focus-visible .card-art {
+    box-shadow: 0 16px 40px rgba(3, 8, 14, 0.62);
+    outline-color: var(--teal-400);
+  }
 }
 
 /* ---------- budh.ai band ---------- */
@@ -305,11 +596,9 @@ footer :focus-visible {
 }
 
 /* ---------- Sidartha Originals ---------- */
-.orig-head {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: start;
+.orig {
+  background: var(--black-deep);
+  color: #fff;
 }
 /* Lockup en dos líneas, como pide la guía. El peso ligero sobre el negro
    cine es lo que le da el aire de cabecera de film. */
@@ -322,27 +611,21 @@ footer :focus-visible {
 }
 .orig-lockup-a {
   font-weight: 300;
-  font-size: clamp(28px, 3.4vw, 44px);
+  font-size: clamp(24px, 2.8vw, 38px);
   letter-spacing: 0.12em;
   color: #fff;
 }
 .orig-lockup-b {
   font-weight: 500;
-  font-size: clamp(28px, 3.4vw, 44px);
+  font-size: clamp(24px, 2.8vw, 38px);
   letter-spacing: 0.12em;
   color: var(--teal-500);
 }
-.orig-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
-}
-/* Poster 2:3, la proporción de cartel de la guía. */
-.orig-poster {
-  aspect-ratio: 2 / 3;
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--black-deep);
+
+/* ---------- Portafolio ---------- */
+.port {
+  background: var(--navy-900);
+  color: #fff;
 }
 
 /* ---------- forms / footer / legal ---------- */
@@ -548,6 +831,17 @@ footer :focus-visible {
   html {
     scroll-behavior: auto;
   }
+  /* La elevación de la ficha es la única transición que queda en el sitio.
+     Aquí se apaga: el foco sigue marcándose con el contorno teal, que no
+     depende del movimiento. */
+  .card-link,
+  .card-art {
+    transition: none;
+  }
+  .card-link:hover,
+  .card-link:focus-visible {
+    transform: none;
+  }
 }
 
 /* ---------- responsive ---------- */
@@ -588,16 +882,393 @@ footer :focus-visible {
   .launcher-label {
     display: none;
   }
-  .orig-head {
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 36px !important;
+  .orig-billboard,
+  .port-billboard {
+    min-height: 0;
   }
-  .orig-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .orig-billboard-inner,
+  .port-billboard-inner {
+    padding-top: 72px;
+    padding-bottom: 48px;
+  }
+  .orig-billboard-scrim {
+    background: linear-gradient(0deg, var(--black-deep) 12%, rgba(3, 8, 14, 0.72) 70%);
+  }
+  .port-billboard-scrim {
+    background: linear-gradient(0deg, var(--navy-900) 12%, rgba(38, 49, 59, 0.76) 70%);
+  }
+  .orig-rails,
+  .port-rails {
+    gap: 40px;
+    padding-bottom: 72px;
   }
 }
-@media (min-width: 901px) and (max-width: 1200px) {
-  .orig-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+/* ============================================================
+   PÁGINAS INTERIORES
+   ============================================================ */
+
+/* Cabecera de página. Sustituye al Hero en todo lo que no es portada. */
+.phead {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 88px 0 64px;
+}
+.phead-eyebrow {
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal-600);
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+.phead-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(34px, 4.6vw, 62px);
+  letter-spacing: -0.028em;
+  line-height: 1.05;
+  color: var(--navy-900);
+  margin: 0;
+  max-width: 18ch;
+}
+.phead-lead {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 20px 0 0;
+  max-width: 56ch;
+}
+
+/* Marca la página actual en la barra. Sin esto, en un sitio de varias
+   páginas no hay forma de saber dónde estás. */
+.navlink--on {
+  color: var(--teal-700) !important;
+  font-weight: 600;
+}
+.navlink--on::after {
+  width: 100% !important;
+}
+
+/* ---------- director ---------- */
+.dir {
+  padding: 104px 0;
+  background: var(--color-bg);
+}
+.dir-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 56px;
+  align-items: start;
+  margin: 30px 0 72px;
+}
+.dir-portrait {
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--color-surface-alt);
+  position: sticky;
+  top: 100px;
+}
+.dir-name {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(30px, 3.4vw, 46px);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--navy-900);
+  margin: 0;
+}
+.dir-role {
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-600);
+  font-weight: 600;
+  margin: 10px 0 26px;
+}
+.dir-bio {
+  font-family: var(--font-body);
+  font-size: 17.5px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin: 0 0 18px;
+}
+.dir-quote {
+  margin: 32px 0 0;
+  padding: 26px 30px;
+  background: var(--color-surface);
+  border-left: 3px solid var(--teal-500);
+  border-radius: 0 16px 16px 0;
+  color: var(--teal-700);
+}
+.dir-quote p {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--navy-900);
+  margin: 12px 0 14px;
+}
+.dir-quote cite {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+}
+.dir-subhead {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--navy-900);
+  margin: 0 0 22px;
+}
+.dir-awards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.dir-award {
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding: 26px;
+  background: #fff;
+}
+.dir-award-year {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--gray-400);
+  margin-right: 10px;
+}
+.dir-award-kind {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+}
+.dir-award-kind.is-win {
+  background: var(--saffron-300);
+  color: var(--saffron-700);
+}
+.dir-award h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--navy-900);
+  margin: 16px 0 6px;
+}
+.dir-award p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+.dir-award-note {
+  font-size: 13.5px !important;
+  color: var(--color-text-muted) !important;
+  margin-top: 8px !important;
+}
+
+/* ---------- filmografía ---------- */
+.film {
+  background: var(--black-cinema);
+  color: #fff;
+  padding: 104px 0;
+}
+.film-head {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: -0.025em;
+  margin: 18px 0 0;
+  color: #fff;
+}
+.film-intro {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 16px 0 0;
+  max-width: 62ch;
+}
+.film-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 44px;
+  margin-top: 52px;
+  align-items: start;
+}
+.film-card-art {
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--black-deep);
+}
+.film-card-body h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(24px, 2.6vw, 34px);
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0;
+}
+.film-meta {
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-400);
+  margin: 10px 0 20px;
+}
+.film-syn {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0 0 26px;
+}
+.film-credits {
+  margin: 0;
+  display: grid;
+  gap: 1px;
+}
+.film-credits > div {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 16px;
+  padding: 11px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.film-credits dt {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+.film-credits dd {
+  font-family: var(--font-body);
+  font-size: 15.5px;
+  color: #fff;
+  margin: 0;
+}
+.film-notes {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 22px 0 0;
+  font-style: italic;
+}
+
+/* ---------- cierre de página ---------- */
+.endcta {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 72px 0;
+}
+.endcta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.endcta h2 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(26px, 3vw, 38px);
+  letter-spacing: -0.025em;
+  color: var(--navy-900);
+  margin: 0;
+}
+.endcta p {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  color: var(--color-text-secondary);
+  margin: 10px 0 0;
+}
+
+/* ---------- páginas legales ---------- */
+.legal-page {
+  padding: 72px 0 96px;
+}
+.legal-page h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--navy-900);
+  margin: 34px 0 10px;
+}
+.legal-page p {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.72;
+  color: var(--color-text-secondary);
+  margin: 0 0 12px;
+  max-width: 72ch;
+}
+.legal-meta {
+  margin-top: 40px !important;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+  font-size: 14px !important;
+  color: var(--color-text-muted) !important;
+}
+
+/* ---------- 404 ---------- */
+.nf {
+  padding: 140px 0 160px;
+  text-align: center;
+}
+.nf-code {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(72px, 12vw, 150px);
+  line-height: 1;
+  color: var(--gray-200);
+  margin: 0;
+}
+.nf h1 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 42px);
+  letter-spacing: -0.025em;
+  color: var(--navy-900);
+  margin: 10px 0 0;
+}
+.nf-lead {
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--color-text-secondary);
+  margin: 16px auto 32px;
+  max-width: 46ch;
+}
+
+@media (max-width: 900px) {
+  .dir-grid,
+  .film-card {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .dir-portrait {
+    position: static;
+    max-width: 320px;
+  }
+  .film-credits > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .phead {
+    padding: 60px 0 44px;
   }
 }
