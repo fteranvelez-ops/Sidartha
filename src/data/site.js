@@ -83,6 +83,7 @@ export const PHOTOS = {
   aboutRodaje: { img: null, label: 'Rodaje / territorio', alt: 'Equipo de Sidartha rodando en territorio' },
   aboutEvento: { img: null, label: 'Evento / stand', alt: 'Stand de Sidartha en un evento' },
   budhaiRetrato: { img: null, label: 'Retrato budh.ai', alt: 'budh.ai' },
+  director: { img: null, label: 'Retrato del director', alt: 'Fabricio Terán Vélez' },
 };
 
 /*

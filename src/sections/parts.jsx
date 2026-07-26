@@ -6,7 +6,9 @@
  * would otherwise be unreachable on a phone) and responsive class hooks
  * consumed by the media queries in styles/site.css.
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { ROUTES, NAV_LINKS } from '../routes.js';
 import Icon from '../components/Icon.jsx';
 import { Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
 import { WRAP, MARK, HORIZ_DARK, OFFICE, PHOTOS, DEPARTMENTS, VALUES, PROCESS } from '../data/site.js';
@@ -14,14 +16,15 @@ import { WRAP, MARK, HORIZ_DARK, OFFICE, PHOTOS, DEPARTMENTS, VALUES, PROCESS } 
 export function Nav() {
   const [open, setOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const links = [
-    { label: 'Inicio', href: '#top' },
-    { label: 'Nosotros', href: '#nosotros' },
-    { label: 'Áreas', href: '#areas' },
-    { label: 'Trabajo', href: '#trabajo' },
-    { label: 'Originals', href: '#originals' },
-    { label: 'budh.ai', href: '#budhai' },
-  ];
+  const { pathname } = useLocation();
+
+  /* Cerrar los menús al navegar: si no, el desplegable sobrevive al cambio
+     de página y queda flotando sobre la página nueva. */
+  useEffect(() => {
+    setOpen(false);
+    setMobile(false);
+  }, [pathname]);
+
   return (
     <nav
       style={{
@@ -34,18 +37,23 @@ export function Nav() {
       }}
     >
       <div style={{ ...WRAP, height: 76, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <a href="#top">
+        <Link to={ROUTES.home} aria-label="Sidartha Comunicación — inicio">
           <img src={HORIZ_DARK} alt="Sidartha Comunicación" style={{ height: 40 }} />
-        </a>
+        </Link>
 
         <div
           className="nav-links"
           style={{ display: 'flex', alignItems: 'center', gap: 30, fontFamily: 'var(--font-body)', fontSize: 15 }}
         >
-          {links.map((l) => (
-            <a key={l.label} className="navlink" href={l.href} style={{ color: 'var(--navy-700)', textDecoration: 'none' }}>
+          {NAV_LINKS.map((l) => (
+            <NavLink
+              key={l.label}
+              to={l.to}
+              className={({ isActive }) => 'navlink' + (isActive ? ' navlink--on' : '')}
+              style={{ color: 'var(--navy-700)', textDecoration: 'none' }}
+            >
               {l.label}
-            </a>
+            </NavLink>
           ))}
           {/* Production fix: the mockup opened this menu on hover from a <span>,
               so it was unreachable by keyboard and on touch. Now a real button
@@ -92,9 +100,9 @@ export function Nav() {
                 }}
               >
                 {DEPARTMENTS.map((d) => (
-                  <a
+                  <Link
                     key={d.n}
-                    href="#areas"
+                    to={`${ROUTES.areas}#area-${d.n}`}
                     onClick={() => setOpen(false)}
                     style={{
                       display: 'block',
@@ -109,7 +117,7 @@ export function Nav() {
                   >
                     <span style={{ color: 'var(--teal-600)', fontWeight: 600, marginRight: 8 }}>{d.n}</span>
                     {d.title}
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}
@@ -117,9 +125,9 @@ export function Nav() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <a href="#contacto" className="btnx btnx-primary" style={{ padding: '11px 22px', fontSize: 14 }}>
+          <Link to={ROUTES.contacto} className="btnx btnx-primary" style={{ padding: '11px 22px', fontSize: 14 }}>
             Conversemos <Icon name="arrow-right" size={16} />
-          </a>
+          </Link>
           {/* Production addition: mobile menu toggle. */}
           <button
             className="nav-burger"
@@ -149,11 +157,10 @@ export function Nav() {
           className="nav-mobile"
           style={{ borderTop: '1px solid var(--color-border)', background: '#fff', padding: '10px 24px 18px' }}
         >
-          {[...links, { label: 'Contacto', href: '#contacto' }].map((l) => (
-            <a
+          {[...NAV_LINKS, { label: 'Contacto', to: ROUTES.contacto }].map((l) => (
+            <Link
               key={l.label}
-              href={l.href}
-              onClick={() => setMobile(false)}
+              to={l.to}
               style={{
                 display: 'block',
                 padding: '12px 0',
@@ -165,7 +172,7 @@ export function Nav() {
               }}
             >
               {l.label}
-            </a>
+            </Link>
           ))}
         </div>
       )}
@@ -239,12 +246,12 @@ export function Hero() {
             enfoque estratégico, con más de 20 años de trayectoria.
           </p>
           <div className="reveal" style={{ display: 'flex', gap: 16, marginTop: 38, flexWrap: 'wrap' }}>
-            <a href="#trabajo" className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
+            <Link to={ROUTES.trabajo} className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
               Ver nuestro trabajo <Icon name="arrow-right" size={18} />
-            </a>
-            <a href="#contacto" className="btnx btnx-ghost" style={{ padding: '16px 30px', fontSize: 16 }}>
+            </Link>
+            <Link to={ROUTES.contacto} className="btnx btnx-ghost" style={{ padding: '16px 30px', fontSize: 16 }}>
               ¿Empezamos?
-            </a>
+            </Link>
           </div>
         </div>
 

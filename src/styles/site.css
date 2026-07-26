@@ -25,6 +25,56 @@ img {
   display: block;
 }
 
+/* ---------- animación de entrada ----------
+ * Un solo gesto para todo el sitio: el bloque sube 18px y aparece. Corto
+ * (450ms) y con una curva que desacelera, para que se lea como que el
+ * contenido «asienta» y no como una transición de presentación.
+ *
+ * El kit original encadenaba cinco efectos distintos; esto es a propósito
+ * lo contrario. */
+.rv {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 0.68, 0.28, 1);
+}
+.rv-in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Enlace de salto, visible solo al tabular. Sin él, quien navega con
+   teclado atraviesa la barra entera en cada página. */
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 100;
+  background: var(--navy-900);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 0 0 10px 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  text-decoration: none;
+  transition: top 0.18s ease;
+}
+.skip:focus {
+  top: 0;
+  color: #fff;
+  text-decoration: none;
+}
+/* El <main> recibe el foco al cambiar de ruta; no debe dibujar contorno. */
+main:focus {
+  outline: none;
+}
+
 /* ---------- foco visible ----------
  * El kit no definía ninguno, así que el recorrido con teclado era invisible
  * en cuanto un estilo pisaba el outline del navegador. Se usa :focus-visible
@@ -101,16 +151,24 @@ footer :focus-visible {
   color: var(--navy-900);
 }
 
-/* ---------- reveals ----------
- * The kit staged these in on scroll (fade+slide, a line-mask heading wipe,
- * an image clip reveal). Neutralized here to their end state so content is
- * present immediately — the classNames stay on the markup as styling hooks,
- * they just no longer animate. */
-.reveal {
-  opacity: 1;
-}
+/* ---------- ganchos heredados del kit ----------
+ * .reveal y .stag siguen puestos en cientos de bloques del kit original.
+ * En vez de editarlos uno a uno, se reconectan aquí a la misma animación
+ * que usa <Reveal>: mismo gesto, misma duración, un solo lenguaje.
+ *
+ * .mask y .clipr se quedan neutralizados: eran el barrido por línea y el
+ * recorte de imagen, los dos efectos que hacían que «pasaran demasiadas
+ * cosas» a la vez. */
+.reveal,
 .stag > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 0.68, 0.28, 1);
+}
+.reveal.in,
+.stag.in > * {
   opacity: 1;
+  transform: none;
 }
 .mask {
   display: block;
@@ -120,6 +178,14 @@ footer :focus-visible {
 }
 .clipr {
   clip-path: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .stag > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ---------- kinetic type ----------
@@ -835,5 +901,374 @@ footer :focus-visible {
   .port-rails {
     gap: 40px;
     padding-bottom: 72px;
+  }
+}
+
+/* ============================================================
+   PÁGINAS INTERIORES
+   ============================================================ */
+
+/* Cabecera de página. Sustituye al Hero en todo lo que no es portada. */
+.phead {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 88px 0 64px;
+}
+.phead-eyebrow {
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal-600);
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+.phead-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(34px, 4.6vw, 62px);
+  letter-spacing: -0.028em;
+  line-height: 1.05;
+  color: var(--navy-900);
+  margin: 0;
+  max-width: 18ch;
+}
+.phead-lead {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 20px 0 0;
+  max-width: 56ch;
+}
+
+/* Marca la página actual en la barra. Sin esto, en un sitio de varias
+   páginas no hay forma de saber dónde estás. */
+.navlink--on {
+  color: var(--teal-700) !important;
+  font-weight: 600;
+}
+.navlink--on::after {
+  width: 100% !important;
+}
+
+/* ---------- director ---------- */
+.dir {
+  padding: 104px 0;
+  background: var(--color-bg);
+}
+.dir-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 56px;
+  align-items: start;
+  margin: 30px 0 72px;
+}
+.dir-portrait {
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--color-surface-alt);
+  position: sticky;
+  top: 100px;
+}
+.dir-name {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(30px, 3.4vw, 46px);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--navy-900);
+  margin: 0;
+}
+.dir-role {
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-600);
+  font-weight: 600;
+  margin: 10px 0 26px;
+}
+.dir-bio {
+  font-family: var(--font-body);
+  font-size: 17.5px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin: 0 0 18px;
+}
+.dir-quote {
+  margin: 32px 0 0;
+  padding: 26px 30px;
+  background: var(--color-surface);
+  border-left: 3px solid var(--teal-500);
+  border-radius: 0 16px 16px 0;
+  color: var(--teal-700);
+}
+.dir-quote p {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--navy-900);
+  margin: 12px 0 14px;
+}
+.dir-quote cite {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+}
+.dir-subhead {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 24px;
+  color: var(--navy-900);
+  margin: 0 0 22px;
+}
+.dir-awards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.dir-award {
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  padding: 26px;
+  background: #fff;
+}
+.dir-award-year {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--gray-400);
+  margin-right: 10px;
+}
+.dir-award-kind {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+}
+.dir-award-kind.is-win {
+  background: var(--saffron-300);
+  color: var(--saffron-700);
+}
+.dir-award h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--navy-900);
+  margin: 16px 0 6px;
+}
+.dir-award p {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+.dir-award-note {
+  font-size: 13.5px !important;
+  color: var(--color-text-muted) !important;
+  margin-top: 8px !important;
+}
+
+/* ---------- filmografía ---------- */
+.film {
+  background: var(--black-cinema);
+  color: #fff;
+  padding: 104px 0;
+}
+.film-head {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: -0.025em;
+  margin: 18px 0 0;
+  color: #fff;
+}
+.film-intro {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 16px 0 0;
+  max-width: 62ch;
+}
+.film-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 44px;
+  margin-top: 52px;
+  align-items: start;
+}
+.film-card-art {
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--black-deep);
+}
+.film-card-body h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(24px, 2.6vw, 34px);
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0;
+}
+.film-meta {
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-400);
+  margin: 10px 0 20px;
+}
+.film-syn {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0 0 26px;
+}
+.film-credits {
+  margin: 0;
+  display: grid;
+  gap: 1px;
+}
+.film-credits > div {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 16px;
+  padding: 11px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.film-credits dt {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+.film-credits dd {
+  font-family: var(--font-body);
+  font-size: 15.5px;
+  color: #fff;
+  margin: 0;
+}
+.film-notes {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 22px 0 0;
+  font-style: italic;
+}
+
+/* ---------- cierre de página ---------- */
+.endcta {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 72px 0;
+}
+.endcta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.endcta h2 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(26px, 3vw, 38px);
+  letter-spacing: -0.025em;
+  color: var(--navy-900);
+  margin: 0;
+}
+.endcta p {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  color: var(--color-text-secondary);
+  margin: 10px 0 0;
+}
+
+/* ---------- páginas legales ---------- */
+.legal-page {
+  padding: 72px 0 96px;
+}
+.legal-page h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--navy-900);
+  margin: 34px 0 10px;
+}
+.legal-page p {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.72;
+  color: var(--color-text-secondary);
+  margin: 0 0 12px;
+  max-width: 72ch;
+}
+.legal-meta {
+  margin-top: 40px !important;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+  font-size: 14px !important;
+  color: var(--color-text-muted) !important;
+}
+
+/* ---------- 404 ---------- */
+.nf {
+  padding: 140px 0 160px;
+  text-align: center;
+}
+.nf-code {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(72px, 12vw, 150px);
+  line-height: 1;
+  color: var(--gray-200);
+  margin: 0;
+}
+.nf h1 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 42px);
+  letter-spacing: -0.025em;
+  color: var(--navy-900);
+  margin: 10px 0 0;
+}
+.nf-lead {
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--color-text-secondary);
+  margin: 16px auto 32px;
+  max-width: 46ch;
+}
+
+@media (max-width: 900px) {
+  .dir-grid,
+  .film-card {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .dir-portrait {
+    position: static;
+    max-width: 320px;
+  }
+  .film-credits > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .phead {
+    padding: 60px 0 44px;
   }
 }

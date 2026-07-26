@@ -7,10 +7,13 @@
  *  - the budh.ai CTA scrolls to its section, since the separate budh-ai kit
  *    is not part of this build.
  */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Icon from '../components/Icon.jsx';
 import { Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
 import Rail from '../components/Rail.jsx';
+import Reveal from '../components/Reveal.jsx';
+import { ROUTES, LEGAL_LINKS } from '../routes.js';
 import { Input, Textarea, Button } from '../components/ui.jsx';
 import { submitForm } from '../lib/forms.js';
 import {
@@ -53,7 +56,10 @@ function projectRails(projects) {
   return rails;
 }
 
-export function Portfolio() {
+/* `as` decide el nivel del titular. En su propia página este bloque es el
+   encabezado principal y va como h1; incrustado en la portada es una
+   sección más y va como h2. Sin esto, /trabajo se quedaba sin h1. */
+export function Portfolio({ as: Heading = 'h2' }) {
   const featured = PROJECTS[0];
   const rails = projectRails(PROJECTS);
 
@@ -69,17 +75,17 @@ export function Portfolio() {
           <Eyebrow n="05" light>
             Portafolio
           </Eyebrow>
-          <h2 className="port-billboard-title">Nuestros últimos trabajos</h2>
+          <Heading className="port-billboard-title">Nuestros últimos trabajos</Heading>
           <p className="port-billboard-copy">
             Documentales, campañas 360° y eventos para instituciones, ONGs y marcas. Explora por formato.
           </p>
           <div className="port-billboard-cta">
-            <a href="#contacto" className="btnx btnx-primary" style={{ padding: '15px 28px', fontSize: 15 }}>
+            <Link to={ROUTES.contacto} className="btnx btnx-primary" style={{ padding: '15px 28px', fontSize: 15 }}>
               Escríbenos <Icon name="arrow-right" size={17} />
-            </a>
-            <a href="#originals" className="btnx btnx-glass" style={{ padding: '15px 28px', fontSize: 15 }}>
+            </Link>
+            <Link to={ROUTES.originals} className="btnx btnx-glass" style={{ padding: '15px 28px', fontSize: 15 }}>
               <Icon name="info" size={17} /> Sidartha Originals
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -93,7 +99,7 @@ export function Portfolio() {
                     al contacto. El aria-label lo dice: si no, un lector de
                     pantalla anuncia catorce enlaces distintos que van al
                     mismo sitio sin explicar por qué. */}
-                <a className="card-link" href="#contacto" aria-label={`${p.title} — escríbenos para ver este trabajo`}>
+                <Link className="card-link" to={ROUTES.contacto} aria-label={`${p.title} — escríbenos para ver este trabajo`}>
                   <div className="card-art">
                     {/* Etiqueta corta: el título va justo debajo de la ficha y
                         repetirlo dentro lo duplicaba en pantalla. */}
@@ -101,7 +107,7 @@ export function Portfolio() {
                   </div>
                   <h4 className="card-title">{p.title}</h4>
                   <p className="card-meta">{p.cat}</p>
-                </a>
+                </Link>
               </article>
             ))}
           </Rail>
@@ -141,7 +147,7 @@ export function Stats() {
 }
 
 /* ---------- budh.ai band ---------- */
-export function BudhAi() {
+export function BudhAi({ as = 'h2' }) {
   return (
     <section id="budhai" style={{ background: 'var(--navy-900)', color: '#fff', padding: '110px 0', position: 'relative', overflow: 'hidden' }}>
       <div className="pat" style={{ position: 'absolute', inset: 0, opacity: 0.05 }} />
@@ -176,6 +182,7 @@ export function BudhAi() {
             </Eyebrow>
           </div>
           <MaskHead
+            tag={as}
             lines={['No resuelve rápido.', 'Pregunta primero.']}
             style={{
               fontFamily: 'var(--font-display)',
@@ -234,9 +241,9 @@ export function BudhAi() {
 
           {/* The kit linked to ../budh-ai/index.html — a separate UI kit that is
               not part of this build. Points at the contact form until it ships. */}
-          <a href="#contacto" className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
+          <Link to={ROUTES.contacto} className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
             Conversa con budh.ai <Icon name="arrow-up-right" size={18} />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
@@ -251,7 +258,7 @@ export function BudhAi() {
  * El billboard toma la primera colección que ya tiene póster. No se elige a
  * mano para que siga funcionando cuando cambie el orden o lleguen pósters
  * nuevos. */
-export function Originals() {
+export function Originals({ as: Heading = 'h2' }) {
   const featured = ORIGINALS_COLLECTIONS.find((c) => c.poster) || ORIGINALS_COLLECTIONS[0];
 
   return (
@@ -268,11 +275,11 @@ export function Originals() {
             <span className="orig-lockup-b">Originals</span>
           </div>
 
-          <h2 className="orig-billboard-title">
+          <Heading className="orig-billboard-title">
             Historias propias con
             <br />
             mirada documental.
-          </h2>
+          </Heading>
 
           <p className="orig-billboard-copy">{ORIGINALS_INTRO}</p>
 
@@ -286,12 +293,12 @@ export function Originals() {
           </ul>
 
           <div className="orig-billboard-cta">
-            <a href="#contacto" className="btnx btnx-light" style={{ padding: '15px 28px', fontSize: 15 }}>
+            <Link to={ROUTES.contacto} className="btnx btnx-light" style={{ padding: '15px 28px', fontSize: 15 }}>
               <Icon name="arrow-right" size={17} /> Presentar un proyecto
-            </a>
-            <a href="#trabajo" className="btnx btnx-glass" style={{ padding: '15px 28px', fontSize: 15 }}>
+            </Link>
+            <Link to={ROUTES.trabajo} className="btnx btnx-glass" style={{ padding: '15px 28px', fontSize: 15 }}>
               <Icon name="info" size={17} /> Ver el trabajo
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -307,7 +314,7 @@ export function Originals() {
         >
           {ORIGINALS_COLLECTIONS.map((c) => (
             <article key={c.slug} className="card card--poster">
-              <a className="card-link" href="#contacto" aria-label={`${c.title} — escríbenos sobre esta colección`}>
+              <Link className="card-link" to={ROUTES.contacto} aria-label={`${c.title} — escríbenos sobre esta colección`}>
                 <div className="card-art">
                   {/* El título va debajo de la ficha: repetirlo dentro del
                       póster lo duplicaba en pantalla y en lectores. */}
@@ -315,7 +322,7 @@ export function Originals() {
                 </div>
                 <h4 className="card-title">{c.title}</h4>
                 <p className="card-meta">Colección</p>
-              </a>
+              </Link>
             </article>
           ))}
         </Rail>
@@ -588,9 +595,9 @@ export function CallCTA() {
             Agenda 30 minutos con nuestro equipo — hablarás directamente con nosotros.
           </p>
         </div>
-        <a href="#contacto" className="btnx btnx-primary" style={{ padding: '18px 34px', fontSize: 17 }}>
+        <Link to={ROUTES.contacto} className="btnx btnx-primary" style={{ padding: '18px 34px', fontSize: 17 }}>
           <Icon name="calendar-days" size={19} /> Agenda una llamada
-        </a>
+        </Link>
       </div>
     </section>
   );
@@ -641,26 +648,26 @@ function Newsletter() {
   );
 }
 
-export function Footer({ onLegal }) {
+export function Footer() {
   const cols = [
     {
       h: 'Explorar',
       links: [
-        ['Inicio', '#top'],
-        ['Nosotros', '#nosotros'],
-        ['Áreas', '#areas'],
-        ['Trabajo', '#trabajo'],
-        ['Contacto', '#contacto'],
+        ['Inicio', ROUTES.home],
+        ['Nosotros', ROUTES.nosotros],
+        ['Áreas', ROUTES.areas],
+        ['Trabajo', ROUTES.trabajo],
+        ['Contacto', ROUTES.contacto],
       ],
     },
     {
       h: 'Servicios',
       links: [
-        ['Comunicación Integral', '#areas'],
-        ['Producción Audiovisual', '#areas'],
-        ['Network', '#areas'],
-        ['Sidartha Originals', '#originals'],
-        ['budh.ai', '#budhai'],
+        ['Comunicación Integral', ROUTES.areas],
+        ['Producción Audiovisual', ROUTES.areas],
+        ['Network', ROUTES.areas],
+        ['Sidartha Originals', ROUTES.originals],
+        ['budh.ai', ROUTES.budhai],
       ],
     },
   ];
@@ -718,9 +725,9 @@ export function Footer({ onLegal }) {
               {col.h}
             </div>
             {col.links.map(([l, h]) => (
-              <a key={l} href={h} style={{ display: 'block', color: 'var(--teal-200)', textDecoration: 'none', fontSize: 15, marginBottom: 11 }}>
+              <Link key={l} to={h} style={{ display: 'block', color: 'var(--teal-200)', textDecoration: 'none', fontSize: 15, marginBottom: 11 }}>
                 {l}
-              </a>
+              </Link>
             ))}
           </div>
         ))}
@@ -771,67 +778,14 @@ export function Footer({ onLegal }) {
         >
           <span>© {new Date().getFullYear()} Sidartha Comunicación · Todos los derechos reservados</span>
           <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-            {Object.keys(LEGAL).map((k) => (
-              <button key={k} className="flink" onClick={() => onLegal(k)}>
-                {LEGAL[k].label}
-              </button>
+            {LEGAL_LINKS.map((l) => (
+              <Link key={l.to} className="flink" to={l.to}>
+                {l.label}
+              </Link>
             ))}
           </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-export function LegalModal({ tab, setTab, onClose }) {
-  useEffect(() => {
-    const esc = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', esc);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', esc);
-      document.body.style.overflow = '';
-    };
-  }, [onClose]);
-
-  return (
-    <div className="lm-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-label={LEGAL[tab].label}>
-      <div className="lm-panel" onClick={(e) => e.stopPropagation()}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '24px 34px 16px' }}>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {Object.keys(LEGAL).map((k) => (
-              <button key={k} className={'lm-tab' + (k === tab ? ' on' : '')} onClick={() => setTab(k)}>
-                {LEGAL[k].label}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Cerrar"
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: '50%',
-              border: '1px solid var(--color-border)',
-              background: '#fff',
-              color: 'var(--navy-800)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              flexShrink: 0,
-            }}
-          >
-            <Icon name="x" size={18} />
-          </button>
-        </div>
-        <div className="lm-body">
-          <h4 style={{ marginTop: 0 }}>{LEGAL[tab].label}</h4>
-          {LEGAL[tab].body.map((row, i) => (row[0] === 'h' ? <h4 key={i}>{row[1]}</h4> : <p key={i}>{row[1]}</p>))}
-        </div>
-      </div>
-    </div>
   );
 }
