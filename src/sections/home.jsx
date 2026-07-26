@@ -10,6 +10,7 @@
 import { useEffect, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
+import Rail from '../components/Rail.jsx';
 import { Input, Textarea, Button } from '../components/ui.jsx';
 import { submitForm } from '../lib/forms.js';
 import {
@@ -28,87 +29,83 @@ import {
   ORIGINALS_COLLECTIONS,
 } from '../data/site.js';
 
+/* Agrupa los proyectos por categoría para armar un carrusel por cada una.
+   Las categorías con una sola pieza no sostienen una fila propia, así que
+   caen juntas en «Otros formatos»; con esto la sección se reordena sola
+   cuando entren proyectos nuevos, sin tocar el componente. */
+function projectRails(projects) {
+  const byCat = new Map();
+  projects.forEach((p) => {
+    if (!byCat.has(p.cat)) byCat.set(p.cat, []);
+    byCat.get(p.cat).push(p);
+  });
+
+  /* Una primera fila con todo el catálogo: es la que da la medida del
+     volumen de trabajo, y al desbordar deja claro que las filas se
+     recorren en horizontal antes de llegar a las de categoría. */
+  const rails = [{ key: 'todos', title: 'Todos los trabajos', items: projects }];
+  const leftovers = [];
+  byCat.forEach((items, cat) => {
+    if (items.length >= 2) rails.push({ key: cat, title: cat, items });
+    else leftovers.push(...items);
+  });
+  if (leftovers.length) rails.push({ key: 'otros', title: 'Otros formatos', items: leftovers });
+  return rails;
+}
+
 export function Portfolio() {
+  const featured = PROJECTS[0];
+  const rails = projectRails(PROJECTS);
+
   return (
-    <section id="trabajo" style={{ background: 'var(--white)', borderTop: '1px solid var(--color-border)' }}>
-      <div style={{ ...WRAP, paddingTop: 100, paddingBottom: 44 }}>
-        <div
-          className="reveal"
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}
-        >
-          <div>
-            <Eyebrow n="05">Portafolio</Eyebrow>
-            <MaskHead
-              lines={['Nuestros últimos trabajos']}
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 300,
-                fontSize: 'clamp(32px,4vw,52px)',
-                color: 'var(--navy-900)',
-                margin: '18px 0 0',
-                letterSpacing: '-.025em',
-              }}
-            />
-          </div>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--color-text-muted)', maxWidth: 320 }}>
-            Una selección de proyectos recientes.
-          </p>
+    <section id="trabajo" className="port">
+      <div className="port-billboard">
+        <div className="port-billboard-art">
+          <ImageSlot src={featured.img} alt="" shape="rect" label={featured.title} dark />
         </div>
-      </div>
+        <div className="port-billboard-scrim" />
 
-      <div className="port-grid" style={{ ...WRAP, paddingBottom: 100 }}>
-        {PROJECTS.map((p) => (
-          <div key={p.id} className="pcell">
-            <div className="pimg">
-              <ImageSlot src={p.img} alt={p.title} shape="rect" label={p.title} dark />
-            </div>
-            <div className="pscrim" />
-            <div className="pmeta">
-              <div>
-                <div
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 12,
-                    letterSpacing: '.12em',
-                    textTransform: 'uppercase',
-                    color: 'var(--teal-300)',
-                    fontWeight: 600,
-                    marginBottom: 7,
-                  }}
-                >
-                  {p.cat}
-                </div>
-                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 22, color: '#fff', lineHeight: 1.12 }}>
-                  {p.title}
-                </div>
-              </div>
-              <span className="parrow">
-                <Icon name="arrow-up-right" size={20} />
-              </span>
-            </div>
-          </div>
-        ))}
-
-        <div className="pcell" style={{ background: 'var(--navy-900)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ textAlign: 'center', padding: 30 }}>
-            <img src={MARK} alt="" style={{ width: 74, margin: '0 auto 20px', opacity: 0.9 }} />
-            <div
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 300,
-                fontSize: 25,
-                color: '#fff',
-                marginBottom: 18,
-                lineHeight: 1.2,
-              }}
-            >
-              ¿Vemos el portafolio completo?
-            </div>
-            <a href="#contacto" className="btnx btnx-light" style={{ padding: '13px 26px', fontSize: 15 }}>
-              Escríbenos <Icon name="arrow-right" size={16} />
+        <div className="port-billboard-inner" style={{ ...WRAP }}>
+          <Eyebrow n="05" light>
+            Portafolio
+          </Eyebrow>
+          <h2 className="port-billboard-title">Nuestros últimos trabajos</h2>
+          <p className="port-billboard-copy">
+            Documentales, campañas 360° y eventos para instituciones, ONGs y marcas. Explora por formato.
+          </p>
+          <div className="port-billboard-cta">
+            <a href="#contacto" className="btnx btnx-primary" style={{ padding: '15px 28px', fontSize: 15 }}>
+              Escríbenos <Icon name="arrow-right" size={17} />
+            </a>
+            <a href="#originals" className="btnx btnx-glass" style={{ padding: '15px 28px', fontSize: 15 }}>
+              <Icon name="info" size={17} /> Sidartha Originals
             </a>
           </div>
         </div>
+      </div>
+
+      <div className="port-rails">
+        {rails.map((r) => (
+          <Rail key={r.key} id={`port-${r.key}`} title={r.title}>
+            {r.items.map((p) => (
+              <article key={p.id} className="card card--wide">
+                {/* Todavía no hay ficha por proyecto, así que la tarjeta lleva
+                    al contacto. El aria-label lo dice: si no, un lector de
+                    pantalla anuncia catorce enlaces distintos que van al
+                    mismo sitio sin explicar por qué. */}
+                <a className="card-link" href="#contacto" aria-label={`${p.title} — escríbenos para ver este trabajo`}>
+                  <div className="card-art">
+                    {/* Etiqueta corta: el título va justo debajo de la ficha y
+                        repetirlo dentro lo duplicaba en pantalla. */}
+                    <ImageSlot src={p.img} alt="" shape="rect" label="Imagen" dark />
+                  </div>
+                  <h4 className="card-title">{p.title}</h4>
+                  <p className="card-meta">{p.cat}</p>
+                </a>
+              </article>
+            ))}
+          </Rail>
+        ))}
       </div>
     </section>
   );
@@ -247,120 +244,81 @@ export function BudhAi() {
 }
 
 /* ---------- Sidartha Originals ----------
- * La línea editorial propia. Fondo negro cine (no navy) para separarla del
- * sitio corporativo, tal como pide la guía: más inmersiva y cinematográfica,
- * con el teal algo más presente pero sin competir con las imágenes. */
+ * La línea editorial propia, presentada como un catálogo: un billboard
+ * destacado y carruseles de fichas. Fondo negro cine (no navy) para
+ * separarla del sitio corporativo, como pide la guía.
+ *
+ * El billboard toma la primera colección que ya tiene póster. No se elige a
+ * mano para que siga funcionando cuando cambie el orden o lleguen pósters
+ * nuevos. */
 export function Originals() {
+  const featured = ORIGINALS_COLLECTIONS.find((c) => c.poster) || ORIGINALS_COLLECTIONS[0];
+
   return (
-    <section
-      id="originals"
-      style={{ background: 'var(--black-cinema)', color: '#fff', padding: '120px 0', position: 'relative', overflow: 'hidden' }}
-    >
-      <div className="pat" style={{ position: 'absolute', inset: 0, opacity: 0.04 }} />
+    <section id="originals" className="orig">
+      <div className="orig-billboard">
+        {featured.poster && (
+          <img className="orig-billboard-bg" src={featured.poster} alt="" aria-hidden="true" />
+        )}
+        <div className="orig-billboard-scrim" />
 
-      <div style={{ ...WRAP, position: 'relative' }}>
-        <div className="orig-head">
-          <div>
-            <div className="orig-lockup">
-              <span className="orig-lockup-a">Sidartha</span>
-              <span className="orig-lockup-b">Originals</span>
-            </div>
-            <h2
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 300,
-                fontSize: 'clamp(30px,3.6vw,50px)',
-                letterSpacing: '-.025em',
-                lineHeight: 1.1,
-                margin: '26px 0 0',
-                color: '#fff',
-              }}
-            >
-              Historias propias con
-              <br />
-              mirada documental.
-            </h2>
+        <div className="orig-billboard-inner" style={{ ...WRAP }}>
+          <div className="orig-lockup">
+            <span className="orig-lockup-a">Sidartha</span>
+            <span className="orig-lockup-b">Originals</span>
           </div>
 
-          <div>
-            <p
-              style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: 17.5,
-                lineHeight: 1.65,
-                color: 'rgba(255,255,255,.72)',
-                margin: '0 0 26px',
-                maxWidth: 480,
-              }}
-            >
-              {ORIGINALS_INTRO}
-            </p>
-            <ul style={{ listStyle: 'none', margin: '0 0 30px', padding: 0, display: 'grid', gap: 1 }}>
-              {ORIGINALS_FORMATS.map((f) => (
-                <li
-                  key={f.label}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 14,
-                    padding: '13px 0',
-                    borderTop: '1px solid rgba(255,255,255,.12)',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 15.5,
-                    color: 'rgba(255,255,255,.86)',
-                  }}
-                >
-                  <span style={{ color: 'var(--teal-400)', fontFamily: 'var(--font-display)', fontSize: 13, letterSpacing: '.1em' }}>
-                    {f.n}
-                  </span>
-                  {f.label}
-                </li>
-              ))}
-            </ul>
-            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-              <a href="#contacto" className="btnx btnx-primary" style={{ padding: '15px 28px', fontSize: 15 }}>
-                Presentar un proyecto <Icon name="arrow-right" size={17} />
-              </a>
-            </div>
+          <h2 className="orig-billboard-title">
+            Historias propias con
+            <br />
+            mirada documental.
+          </h2>
+
+          <p className="orig-billboard-copy">{ORIGINALS_INTRO}</p>
+
+          <ul className="orig-formats">
+            {ORIGINALS_FORMATS.map((f) => (
+              <li key={f.label}>
+                <span className="orig-formats-n">{f.n}</span>
+                {f.label}
+              </li>
+            ))}
+          </ul>
+
+          <div className="orig-billboard-cta">
+            <a href="#contacto" className="btnx btnx-light" style={{ padding: '15px 28px', fontSize: 15 }}>
+              <Icon name="arrow-right" size={17} /> Presentar un proyecto
+            </a>
+            <a href="#trabajo" className="btnx btnx-glass" style={{ padding: '15px 28px', fontSize: 15 }}>
+              <Icon name="info" size={17} /> Ver el trabajo
+            </a>
           </div>
         </div>
+      </div>
 
-        <p
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: 12,
-            letterSpacing: '.16em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,.42)',
-            margin: '72px 0 22px',
-          }}
+      {/* Sin WRAP inline: su `padding: 0 40px` es un atajo que pone el padding
+          vertical a 0 y, al ser inline, gana siempre. El ancho y el aire los
+          define .orig-rails en el CSS. */}
+      <div className="orig-rails">
+        <Rail
+          id="orig-colecciones"
+          title="Colecciones editoriales"
+          subtitle="Las líneas temáticas que articulan el catálogo."
         >
-          Colecciones editoriales
-        </p>
-
-        <div className="orig-grid">
           {ORIGINALS_COLLECTIONS.map((c) => (
-            <div key={c.slug}>
-              <div className="orig-poster">
-                {/* label corto: el título va justo debajo, repetirlo dentro
-                    del póster lo duplicaba en pantalla y en lectores. */}
-                <ImageSlot src={c.poster} alt={c.title} shape="rect" label="Póster" dark />
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 400,
-                  fontSize: 16,
-                  color: '#fff',
-                  marginTop: 12,
-                  lineHeight: 1.25,
-                }}
-              >
-                {c.title}
-              </div>
-            </div>
+            <article key={c.slug} className="card card--poster">
+              <a className="card-link" href="#contacto" aria-label={`${c.title} — escríbenos sobre esta colección`}>
+                <div className="card-art">
+                  {/* El título va debajo de la ficha: repetirlo dentro del
+                      póster lo duplicaba en pantalla y en lectores. */}
+                  <ImageSlot src={c.poster} alt="" shape="rect" label="Póster" dark />
+                </div>
+                <h4 className="card-title">{c.title}</h4>
+                <p className="card-meta">Colección</p>
+              </a>
+            </article>
           ))}
-        </div>
+        </Rail>
       </div>
     </section>
   );
