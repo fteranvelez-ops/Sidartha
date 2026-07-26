@@ -9,16 +9,29 @@
  */
 import { useEffect, useState } from 'react';
 import Icon from '../components/Icon.jsx';
-import { Marquee, Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
+import { Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
 import { Input, Textarea, Button } from '../components/ui.jsx';
 import { submitForm } from '../lib/forms.js';
-import { WRAP, MARK, HORIZ_LIGHT, PROJECTS, STATS, CLIENTS, FOUNDERS, LEGAL } from '../data/site.js';
+import {
+  WRAP,
+  MARK,
+  HORIZ_LIGHT,
+  PROJECTS,
+  PHOTOS,
+  STATS,
+  CLIENTS,
+  FOUNDERS,
+  LEGAL,
+  SOCIAL,
+  ORIGINALS_INTRO,
+  ORIGINALS_FORMATS,
+  ORIGINALS_COLLECTIONS,
+} from '../data/site.js';
 
-/* ---------- pinned horizontal gallery ---------- */
 export function Portfolio() {
   return (
     <section id="trabajo" style={{ background: 'var(--white)', borderTop: '1px solid var(--color-border)' }}>
-      <div style={{ ...WRAP, paddingTop: 100, paddingBottom: 20 }}>
+      <div style={{ ...WRAP, paddingTop: 100, paddingBottom: 44 }}>
         <div
           className="reveal"
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 20 }}
@@ -37,94 +50,63 @@ export function Portfolio() {
               }}
             />
           </div>
-          <p
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: 15,
-              color: 'var(--color-text-muted)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 9,
-            }}
-          >
-            <Icon name="mouse-pointer-2" size={16} /> Desplázate para recorrer la galería
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 16, color: 'var(--color-text-muted)', maxWidth: 320 }}>
+            Una selección de proyectos recientes.
           </p>
         </div>
       </div>
 
-      {/* tall wrapper drives the horizontal travel of the sticky stage */}
-      <div className="pin-wrap" data-pin style={{ height: '320vh' }}>
-        <div className="pin-stage">
-          <div className="pin-track" data-pin-track>
-            {PROJECTS.map((p) => (
-              <div key={p.id} className={'pcell' + (p.tall ? ' tall' : '')}>
-                <div className="pimg">
-                  <ImageSlot shape="rect" label={p.title} dark />
-                </div>
-                <div className="pscrim" />
-                <div className="pmeta">
-                  <div>
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-body)',
-                        fontSize: 12,
-                        letterSpacing: '.12em',
-                        textTransform: 'uppercase',
-                        color: 'var(--teal-300)',
-                        fontWeight: 600,
-                        marginBottom: 7,
-                      }}
-                    >
-                      {p.cat}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-display)',
-                        fontWeight: 400,
-                        fontSize: p.tall ? 22 : 27,
-                        color: '#fff',
-                        lineHeight: 1.12,
-                      }}
-                    >
-                      {p.title}
-                    </div>
-                  </div>
-                  <span className="parrow">
-                    <Icon name="arrow-up-right" size={20} />
-                  </span>
-                </div>
-              </div>
-            ))}
-
-            <div
-              className="pcell"
-              style={{
-                background: 'var(--navy-900)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 'min(34vw,420px)',
-              }}
-            >
-              <div style={{ textAlign: 'center', padding: 30 }}>
-                <img src={MARK} alt="" style={{ width: 74, margin: '0 auto 20px', opacity: 0.9 }} />
+      <div className="port-grid" style={{ ...WRAP, paddingBottom: 100 }}>
+        {PROJECTS.map((p) => (
+          <div key={p.id} className="pcell">
+            <div className="pimg">
+              <ImageSlot src={p.img} alt={p.title} shape="rect" label={p.title} dark />
+            </div>
+            <div className="pscrim" />
+            <div className="pmeta">
+              <div>
                 <div
                   style={{
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 300,
-                    fontSize: 25,
-                    color: '#fff',
-                    marginBottom: 18,
-                    lineHeight: 1.2,
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 12,
+                    letterSpacing: '.12em',
+                    textTransform: 'uppercase',
+                    color: 'var(--teal-300)',
+                    fontWeight: 600,
+                    marginBottom: 7,
                   }}
                 >
-                  ¿Vemos el portafolio completo?
+                  {p.cat}
                 </div>
-                <a href="#contacto" className="btnx btnx-light" style={{ padding: '13px 26px', fontSize: 15 }}>
-                  Escríbenos <Icon name="arrow-right" size={16} />
-                </a>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 22, color: '#fff', lineHeight: 1.12 }}>
+                  {p.title}
+                </div>
               </div>
+              <span className="parrow">
+                <Icon name="arrow-up-right" size={20} />
+              </span>
             </div>
+          </div>
+        ))}
+
+        <div className="pcell" style={{ background: 'var(--navy-900)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center', padding: 30 }}>
+            <img src={MARK} alt="" style={{ width: 74, margin: '0 auto 20px', opacity: 0.9 }} />
+            <div
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 300,
+                fontSize: 25,
+                color: '#fff',
+                marginBottom: 18,
+                lineHeight: 1.2,
+              }}
+            >
+              ¿Vemos el portafolio completo?
+            </div>
+            <a href="#contacto" className="btnx btnx-light" style={{ padding: '13px 26px', fontSize: 15 }}>
+              Escríbenos <Icon name="arrow-right" size={16} />
+            </a>
           </div>
         </div>
       </div>
@@ -171,7 +153,13 @@ export function BudhAi() {
           <div style={{ position: 'relative', width: 190, height: 190 }}>
             <div className="ring" />
             <div style={{ position: 'absolute', inset: 11, borderRadius: '50%', overflow: 'hidden', background: 'var(--navy-800)' }}>
-              <ImageSlot shape="circle" label="Retrato budh.ai" dark />
+              <ImageSlot
+                src={PHOTOS.budhaiRetrato.img}
+                alt={PHOTOS.budhaiRetrato.alt}
+                shape="circle"
+                label={PHOTOS.budhaiRetrato.label}
+                dark
+              />
             </div>
           </div>
           <div style={{ textAlign: 'center' }}>
@@ -249,9 +237,129 @@ export function BudhAi() {
 
           {/* The kit linked to ../budh-ai/index.html — a separate UI kit that is
               not part of this build. Points at the contact form until it ships. */}
-          <a href="#contacto" data-magnetic className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
+          <a href="#contacto" className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
             Conversa con budh.ai <Icon name="arrow-up-right" size={18} />
           </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Sidartha Originals ----------
+ * La línea editorial propia. Fondo negro cine (no navy) para separarla del
+ * sitio corporativo, tal como pide la guía: más inmersiva y cinematográfica,
+ * con el teal algo más presente pero sin competir con las imágenes. */
+export function Originals() {
+  return (
+    <section
+      id="originals"
+      style={{ background: 'var(--black-cinema)', color: '#fff', padding: '120px 0', position: 'relative', overflow: 'hidden' }}
+    >
+      <div className="pat" style={{ position: 'absolute', inset: 0, opacity: 0.04 }} />
+
+      <div style={{ ...WRAP, position: 'relative' }}>
+        <div className="orig-head">
+          <div>
+            <div className="orig-lockup">
+              <span className="orig-lockup-a">Sidartha</span>
+              <span className="orig-lockup-b">Originals</span>
+            </div>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 300,
+                fontSize: 'clamp(30px,3.6vw,50px)',
+                letterSpacing: '-.025em',
+                lineHeight: 1.1,
+                margin: '26px 0 0',
+                color: '#fff',
+              }}
+            >
+              Historias propias con
+              <br />
+              mirada documental.
+            </h2>
+          </div>
+
+          <div>
+            <p
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 17.5,
+                lineHeight: 1.65,
+                color: 'rgba(255,255,255,.72)',
+                margin: '0 0 26px',
+                maxWidth: 480,
+              }}
+            >
+              {ORIGINALS_INTRO}
+            </p>
+            <ul style={{ listStyle: 'none', margin: '0 0 30px', padding: 0, display: 'grid', gap: 1 }}>
+              {ORIGINALS_FORMATS.map((f) => (
+                <li
+                  key={f.label}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 14,
+                    padding: '13px 0',
+                    borderTop: '1px solid rgba(255,255,255,.12)',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: 15.5,
+                    color: 'rgba(255,255,255,.86)',
+                  }}
+                >
+                  <span style={{ color: 'var(--teal-400)', fontFamily: 'var(--font-display)', fontSize: 13, letterSpacing: '.1em' }}>
+                    {f.n}
+                  </span>
+                  {f.label}
+                </li>
+              ))}
+            </ul>
+            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+              <a href="#contacto" className="btnx btnx-primary" style={{ padding: '15px 28px', fontSize: 15 }}>
+                Presentar un proyecto <Icon name="arrow-right" size={17} />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: 12,
+            letterSpacing: '.16em',
+            textTransform: 'uppercase',
+            color: 'rgba(255,255,255,.42)',
+            margin: '72px 0 22px',
+          }}
+        >
+          Colecciones editoriales
+        </p>
+
+        <div className="orig-grid">
+          {ORIGINALS_COLLECTIONS.map((c) => (
+            <div key={c.slug}>
+              <div className="orig-poster">
+                {/* label corto: el título va justo debajo, repetirlo dentro
+                    del póster lo duplicaba en pantalla y en lectores. */}
+                <ImageSlot src={c.poster} alt={c.title} shape="rect" label="Póster" dark />
+              </div>
+              <div
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 400,
+                  fontSize: 16,
+                  color: '#fff',
+                  marginTop: 12,
+                  lineHeight: 1.25,
+                }}
+              >
+                {c.title}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -300,13 +408,13 @@ export function Trust() {
       >
         Hemos trabajado con
       </p>
-      <Marquee dur="40s" sep={<span style={{ margin: '0 40px', color: 'var(--teal-400)' }}>·</span>}>
+      <div style={{ ...WRAP, display: 'flex', flexWrap: 'wrap', gap: '14px 40px' }}>
         {CLIENTS.map((c, i) => (
           <span key={i} className="chip" style={{ fontSize: 30, color: 'rgba(255,255,255,.72)', fontWeight: 400 }}>
             {c}
           </span>
         ))}
-      </Marquee>
+      </div>
     </section>
   );
 }
@@ -402,7 +510,7 @@ export function Contacto() {
               }}
             >
               <div style={{ width: 62, height: 62, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: 'var(--navy-800)' }}>
-                <ImageSlot shape="circle" label="Foto" dark />
+                <ImageSlot src={f.img} alt={f.name} shape="circle" label="Foto" dark />
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: 17, fontWeight: 500, color: 'var(--navy-900)' }}>{f.name}</div>
@@ -500,13 +608,7 @@ export function Contacto() {
 export function CallCTA() {
   return (
     <section style={{ background: 'var(--navy-900)', color: '#fff', position: 'relative', overflow: 'hidden' }}>
-      <img
-        src={MARK}
-        alt=""
-        data-par
-        data-speed="0.08"
-        style={{ position: 'absolute', left: -70, bottom: -70, width: 340, opacity: 0.08 }}
-      />
+      <img src={MARK} alt="" style={{ position: 'absolute', left: -70, bottom: -70, width: 340, opacity: 0.08 }} />
       <div
         style={{
           ...WRAP,
@@ -528,7 +630,7 @@ export function CallCTA() {
             Agenda 30 minutos con nuestro equipo — hablarás directamente con nosotros.
           </p>
         </div>
-        <a href="#contacto" data-magnetic className="btnx btnx-primary" style={{ padding: '18px 34px', fontSize: 17 }}>
+        <a href="#contacto" className="btnx btnx-primary" style={{ padding: '18px 34px', fontSize: 17 }}>
           <Icon name="calendar-days" size={19} /> Agenda una llamada
         </a>
       </div>
@@ -564,10 +666,9 @@ function Newsletter() {
             <Icon name="check" size={18} /> ¡Suscripción registrada!
           </p>
         ) : (
-          <form onSubmit={onSubmit} style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+          <form onSubmit={onSubmit} style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
             <input className="nlinput" type="email" name="correo" required placeholder="tu@correo.com" aria-label="Correo" />
             <button
-              data-magnetic
               className="btnx btnx-primary"
               type="submit"
               disabled={state === 'sending'}
@@ -600,6 +701,7 @@ export function Footer({ onLegal }) {
         ['Comunicación Integral', '#areas'],
         ['Producción Audiovisual', '#areas'],
         ['Network', '#areas'],
+        ['Sidartha Originals', '#originals'],
         ['budh.ai', '#budhai'],
       ],
     },
@@ -619,11 +721,13 @@ export function Footer({ onLegal }) {
             Sabemos contar historias.
           </p>
           <div style={{ display: 'flex', gap: 12 }}>
-            {['instagram', 'facebook', 'globe'].map((ic) => (
+            {SOCIAL.filter((s) => s.href).map((s) => (
               <a
-                key={ic}
-                href="#top"
-                aria-label={ic}
+                key={s.icon}
+                href={s.href}
+                aria-label={s.label}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   width: 40,
                   height: 40,
@@ -635,7 +739,7 @@ export function Footer({ onLegal }) {
                   color: '#fff',
                 }}
               >
-                <Icon name={ic} size={18} />
+                <Icon name={s.icon} size={18} />
               </a>
             ))}
           </div>

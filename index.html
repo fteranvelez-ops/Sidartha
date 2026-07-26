@@ -22,7 +22,11 @@
       property="og:description"
       content="Estrategia 360°, producción audiovisual y eventos. Valoramos tu historia y tu marca."
     />
-    <meta property="og:image" content="/assets/logos/sidartha-horizontal.png" />
+    <!-- og:image y og:url tienen que ser absolutas: WhatsApp, Facebook y
+         LinkedIn no resuelven rutas relativas y la vista previa sale vacía. -->
+    <meta property="og:url" content="https://sidartha-ec.web.app/" />
+    <meta property="og:image" content="https://sidartha-ec.web.app/assets/logos/sidartha-horizontal.png" />
+    <meta property="og:image:alt" content="Sidartha Comunicación" />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>

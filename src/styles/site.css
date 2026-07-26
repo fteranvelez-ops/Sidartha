@@ -6,6 +6,11 @@
 
 html {
   scroll-behavior: smooth;
+  /* The decorative marks bleed past their section on purpose (negative
+     offsets). Clipping only on body left html's own scrollWidth free to
+     grow past the device width, which inflated the whole layout viewport
+     on mobile and pushed every fixed-position element off-screen. */
+  overflow-x: hidden;
 }
 body {
   margin: 0;
@@ -20,44 +25,18 @@ img {
   display: block;
 }
 
-/* ---------- scroll progress ---------- */
-.prog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background: var(--teal-500);
-  z-index: 60;
-  width: 0;
-  transform-origin: 0 50%;
+/* ---------- foco visible ----------
+ * El kit no definía ninguno, así que el recorrido con teclado era invisible
+ * en cuanto un estilo pisaba el outline del navegador. Se usa :focus-visible
+ * para no dibujar el anillo en los clics de ratón. */
+:focus-visible {
+  outline: 2px solid var(--teal-500);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
-
-/* ---------- marquee (scroll-velocity linked) ---------- */
-.mq {
-  display: flex;
-  overflow: hidden;
-  user-select: none;
-}
-.mq-track {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  min-width: 100%;
-  animation: mq var(--mq-dur, 32s) linear infinite;
-}
-@keyframes mq {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-.mq:hover .mq-track {
-  animation-play-state: paused;
-}
-.mq-rev .mq-track {
-  animation-direction: reverse;
+/* Sobre el footer navy el teal pierde contraste: allí el anillo va en blanco. */
+footer :focus-visible {
+  outline-color: #fff;
 }
 
 /* ---------- nav ---------- */
@@ -122,108 +101,35 @@ img {
   color: var(--navy-900);
 }
 
-/* ---------- reveals ---------- */
+/* ---------- reveals ----------
+ * The kit staged these in on scroll (fade+slide, a line-mask heading wipe,
+ * an image clip reveal). Neutralized here to their end state so content is
+ * present immediately — the classNames stay on the markup as styling hooks,
+ * they just no longer animate. */
 .reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.9s var(--ease-standard),
-    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.reveal.in {
   opacity: 1;
-  transform: none;
 }
 .stag > * {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.stag.in > * {
   opacity: 1;
-  transform: none;
 }
-/* line-mask heading reveal */
 .mask {
   display: block;
-  overflow: hidden;
 }
 .mask > span {
   display: block;
-  transform: translateY(105%);
-  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.mask.in > span {
-  transform: none;
-}
-/* image clip reveal */
 .clipr {
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path 1.15s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.clipr.in {
-  clip-path: inset(0 0 0 0);
+  clip-path: none;
 }
 
-/* ---------- cursor ---------- */
-/* Hidden until the motion engine takes over (it adds body.cursor-on only for
-   fine pointers). Without this they park at the top-left corner as two stray
-   dots on every touch device — the 1440px mockup never surfaced it. */
-.cursor-dot,
-.cursor-ring {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-}
-body.cursor-on .cursor-dot,
-body.cursor-on .cursor-ring {
-  display: block;
-}
-.cursor-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--teal-500);
-}
-.cursor-ring {
-  width: 38px;
-  height: 38px;
-  border: 1.5px solid var(--navy-700);
-  mix-blend-mode: difference;
-  transition: width 0.28s var(--ease-standard),
-    height 0.28s var(--ease-standard), background 0.28s ease,
-    border-color 0.28s ease;
-}
-.cursor-ring.lg {
-  width: 78px;
-  height: 78px;
-  background: rgba(34, 193, 221, 0.14);
-  border-color: var(--teal-500);
-}
-.cursor-ring.hide {
-  opacity: 0;
-}
-@media (hover: hover) and (pointer: fine) {
-  body.cursor-on,
-  body.cursor-on * {
-    cursor: none !important;
-  }
-  body.cursor-on input,
-  body.cursor-on textarea {
-    cursor: text !important;
-  }
-}
-
-/* ---------- kinetic type ---------- */
+/* ---------- kinetic type ----------
+ * Sized for an infinite single-line marquee originally; now a wrapped
+ * static row, so the scale is much smaller or multi-word lines overflow. */
 .kmq {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(46px, 8.5vw, 116px);
-  line-height: 1.04;
+  font-size: clamp(22px, 3.2vw, 44px);
+  line-height: 1.2;
   letter-spacing: -0.02em;
   text-transform: uppercase;
 }
@@ -299,37 +205,20 @@ body.cursor-on .cursor-ring {
   background: var(--color-surface);
 }
 
-/* ---------- pinned horizontal gallery ---------- */
-.pin-wrap {
-  position: relative;
-}
-.pin-stage {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-}
-.pin-track {
-  display: flex;
-  gap: 26px;
-  padding: 0 6vw;
-  will-change: transform;
+/* ---------- portfolio grid ----------
+ * Was a scroll-jacked, pinned horizontal gallery. Now a plain responsive
+ * grid that scrolls with the rest of the page. */
+.port-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 .pcell {
   position: relative;
-  flex-shrink: 0;
-  width: min(46vw, 620px);
-  height: min(62vh, 540px);
   border-radius: 22px;
   overflow: hidden;
   background: var(--navy-800);
-}
-.pcell.tall {
-  height: min(72vh, 620px);
-  width: min(34vw, 440px);
+  aspect-ratio: 4 / 5;
 }
 .pcell .pimg {
   position: absolute;
@@ -379,18 +268,6 @@ body.cursor-on .cursor-ring {
   border-radius: 50%;
   border: 1.5px solid var(--teal-500);
   opacity: 0.5;
-  animation: breathe 3.4s var(--ease-standard) infinite;
-}
-@keyframes breathe {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.32;
-  }
-  50% {
-    transform: scale(1.06);
-    opacity: 0.72;
-  }
 }
 .launcher {
   position: fixed;
@@ -422,6 +299,50 @@ body.cursor-on .cursor-ring {
   background: var(--teal-600);
   color: #fff;
   text-decoration: none;
+}
+.launcher-label {
+  white-space: nowrap;
+}
+
+/* ---------- Sidartha Originals ---------- */
+.orig-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+/* Lockup en dos líneas, como pide la guía. El peso ligero sobre el negro
+   cine es lo que le da el aire de cabecera de film. */
+.orig-lockup {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.94;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+.orig-lockup-a {
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: 0.12em;
+  color: #fff;
+}
+.orig-lockup-b {
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: 0.12em;
+  color: var(--teal-500);
+}
+.orig-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+}
+/* Poster 2:3, la proporción de cartel de la guía. */
+.orig-poster {
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--black-deep);
 }
 
 /* ---------- forms / footer / legal ---------- */
@@ -459,6 +380,12 @@ body.cursor-on .cursor-ring {
 }
 .nlinput:focus {
   border-color: var(--teal-400);
+}
+/* .nlinput fija outline:none y, a igual especificidad, gana por ir después
+   que la regla global de :focus-visible. Hay que devolverlo aquí. */
+.nlinput:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 .nlinput::placeholder {
   color: rgba(255, 255, 255, 0.45);
@@ -605,6 +532,12 @@ body.cursor-on .cursor-ring {
   background: var(--navy-700);
   color: rgba(255, 255, 255, 0.62);
 }
+/* El padding y el fondo existen para el texto del placeholder. Con una foto
+   real dentro dibujaban un marco claro alrededor de la imagen. */
+.islot--filled {
+  padding: 0;
+  background: none;
+}
 .islot > img {
   width: 100%;
   height: 100%;
@@ -614,34 +547,6 @@ body.cursor-on .cursor-ring {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .mq-track,
-  .ring {
-    animation: none;
-  }
-  .reveal,
-  .stag > * {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .mask > span {
-    transform: none;
-  }
-  .clipr {
-    clip-path: none;
-  }
-  .cursor-dot,
-  .cursor-ring {
-    display: none;
-  }
-  .pin-stage {
-    position: relative;
-    height: auto;
-  }
-  .pin-track {
-    flex-wrap: wrap;
-    transform: none !important;
   }
 }
 
@@ -653,9 +558,12 @@ body.cursor-on .cursor-ring {
   .nav-burger {
     display: flex !important;
   }
+  /* minmax(0,…) rather than 1fr: a plain 1fr floors at the item's min-content
+     width, which the newsletter form (input + nowrap button) pushed past the
+     viewport. */
   .grid-2,
   .grid-4 {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
   .grid-4-tight {
     grid-template-columns: 1fr 1fr !important;
@@ -673,9 +581,23 @@ body.cursor-on .cursor-ring {
   .dept-row .dept-go {
     display: none !important;
   }
-  .pcell,
-  .pcell.tall {
-    width: 82vw;
-    height: 56vh;
+  .launcher {
+    padding: 8px;
+    gap: 0;
+  }
+  .launcher-label {
+    display: none;
+  }
+  .orig-head {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 36px !important;
+  }
+  .orig-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 901px) and (max-width: 1200px) {
+  .orig-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

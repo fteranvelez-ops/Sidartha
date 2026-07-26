@@ -8,8 +8,8 @@
  */
 import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
-import { Marquee, Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
-import { WRAP, MARK, HORIZ_DARK, OFFICE, DEPARTMENTS, VALUES, PROCESS } from '../data/site.js';
+import { Eyebrow, MaskHead, ImageSlot } from '../components/primitives.jsx';
+import { WRAP, MARK, HORIZ_DARK, OFFICE, PHOTOS, DEPARTMENTS, VALUES, PROCESS } from '../data/site.js';
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -19,6 +19,7 @@ export function Nav() {
     { label: 'Nosotros', href: '#nosotros' },
     { label: 'Áreas', href: '#areas' },
     { label: 'Trabajo', href: '#trabajo' },
+    { label: 'Originals', href: '#originals' },
     { label: 'budh.ai', href: '#budhai' },
   ];
   return (
@@ -46,10 +47,35 @@ export function Nav() {
               {l.label}
             </a>
           ))}
-          <div style={{ position: 'relative' }} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-            <span className="navlink" style={{ color: 'var(--navy-700)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          {/* Production fix: the mockup opened this menu on hover from a <span>,
+              so it was unreachable by keyboard and on touch. Now a real button
+              that toggles on click, still opens on hover, and closes on Escape. */}
+          <div
+            style={{ position: 'relative' }}
+            onMouseEnter={() => setOpen(true)}
+            onMouseLeave={() => setOpen(false)}
+            onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}
+          >
+            <button
+              type="button"
+              className="navlink"
+              aria-expanded={open}
+              aria-haspopup="true"
+              onClick={() => setOpen((v) => !v)}
+              style={{
+                color: 'var(--navy-700)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                fontSize: 'inherit',
+                cursor: 'pointer',
+              }}
+            >
               Servicios <Icon name="chevron-down" size={15} />
-            </span>
+            </button>
             {open && (
               <div
                 style={{
@@ -69,6 +95,7 @@ export function Nav() {
                   <a
                     key={d.n}
                     href="#areas"
+                    onClick={() => setOpen(false)}
                     style={{
                       display: 'block',
                       padding: '10px 14px',
@@ -90,7 +117,7 @@ export function Nav() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <a href="#contacto" data-magnetic className="btnx btnx-primary" style={{ padding: '11px 22px', fontSize: 14 }}>
+          <a href="#contacto" className="btnx btnx-primary" style={{ padding: '11px 22px', fontSize: 14 }}>
             Conversemos <Icon name="arrow-right" size={16} />
           </a>
           {/* Production addition: mobile menu toggle. */}
@@ -112,7 +139,7 @@ export function Nav() {
               cursor: 'pointer',
             }}
           >
-            <Icon name={mobile ? 'x' : 'chevron-down'} size={18} />
+            <Icon name={mobile ? 'x' : 'menu'} size={18} />
           </button>
         </div>
       </div>
@@ -150,15 +177,18 @@ export function Hero() {
   return (
     <header id="top" style={{ position: 'relative', overflow: 'hidden' }}>
       <div style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--navy-800)', color: '#fff' }}>
-        <Marquee dur="26s" sep={<span style={{ margin: '0 26px', color: 'var(--teal-400)' }}>✳</span>}>
+        <div style={{ padding: '14px 24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: '10px 26px' }}>
           {['Sabemos contar historias', 'Comunicación 360°', 'Producción audiovisual', 'Eventos que conectan', 'Historias con impacto'].map(
-            (t, i) => (
-              <span key={i} className="chip" style={{ fontSize: 15, letterSpacing: '.14em', textTransform: 'uppercase', color: '#fff' }}>
-                {t}
+            (t, i, arr) => (
+              <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 26 }}>
+                <span className="chip" style={{ fontSize: 15, letterSpacing: '.14em', textTransform: 'uppercase', color: '#fff' }}>
+                  {t}
+                </span>
+                {i < arr.length - 1 && <span style={{ color: 'var(--teal-400)' }}>✳</span>}
               </span>
             )
           )}
-        </Marquee>
+        </div>
       </div>
 
       <div
@@ -209,10 +239,10 @@ export function Hero() {
             enfoque estratégico, con más de 20 años de trayectoria.
           </p>
           <div className="reveal" style={{ display: 'flex', gap: 16, marginTop: 38, flexWrap: 'wrap' }}>
-            <a href="#trabajo" data-magnetic className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
+            <a href="#trabajo" className="btnx btnx-primary" style={{ padding: '16px 30px', fontSize: 16 }}>
               Ver nuestro trabajo <Icon name="arrow-right" size={18} />
             </a>
-            <a href="#contacto" data-magnetic className="btnx btnx-ghost" style={{ padding: '16px 30px', fontSize: 16 }}>
+            <a href="#contacto" className="btnx btnx-ghost" style={{ padding: '16px 30px', fontSize: 16 }}>
               ¿Empezamos?
             </a>
           </div>
@@ -224,19 +254,11 @@ export function Hero() {
             data-clip
             style={{ position: 'relative', borderRadius: 24, overflow: 'hidden', boxShadow: 'var(--shadow-lg)', aspectRatio: '4/5' }}
           >
-            <img
-              src={OFFICE}
-              alt="Estudio Sidartha"
-              data-par
-              data-speed="-0.06"
-              style={{ width: '100%', height: '110%', objectFit: 'cover' }}
-            />
+            <img src={OFFICE} alt="Estudio Sidartha" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <img
             src={MARK}
             alt=""
-            data-par
-            data-speed="0.16"
             style={{
               position: 'absolute',
               bottom: -34,
@@ -285,19 +307,20 @@ export function Hero() {
 export function KineticMarquee() {
   const rowA = ['Historias', 'Estrategia', 'Audiovisual', 'Eventos'];
   const rowB = ['Comunicación 360°', 'Impacto', 'Producción', 'Network'];
-  const row = (words, rev) => (
-    <Marquee dur="30s" reverse={rev} sep={<span className="out" style={{ margin: '0 .35em' }}>—</span>}>
-      {words.map((w, i) => (
-        <span key={i} className={i % 2 ? 'out' : 'fill'}>
-          {w}
+  const row = (words) => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0 .35em' }}>
+      {words.map((w, i, arr) => (
+        <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '0 .35em' }}>
+          <span className={i % 2 ? 'out' : 'fill'}>{w}</span>
+          {i < arr.length - 1 && <span className="out">—</span>}
         </span>
       ))}
-    </Marquee>
+    </div>
   );
   return (
-    <section className="kmq" style={{ padding: '70px 0', borderBottom: '1px solid var(--color-border)' }}>
-      {row(rowA, false)}
-      <div style={{ marginTop: 8 }}>{row(rowB, true)}</div>
+    <section className="kmq" style={{ padding: '70px 0', borderBottom: '1px solid var(--color-border)', textAlign: 'center' }}>
+      {row(rowA)}
+      <div style={{ marginTop: 8 }}>{row(rowB)}</div>
     </section>
   );
 }
@@ -357,13 +380,25 @@ export function About() {
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '190px 190px', gap: 16 }}
         >
           <div style={{ gridRow: 'span 2', borderRadius: 18, overflow: 'hidden' }}>
-            <ImageSlot label="Rodaje / territorio" shape="rounded" radius={18} />
+            <ImageSlot
+              src={PHOTOS.aboutRodaje.img}
+              alt={PHOTOS.aboutRodaje.alt}
+              label={PHOTOS.aboutRodaje.label}
+              shape="rounded"
+              radius={18}
+            />
           </div>
           <div style={{ borderRadius: 18, overflow: 'hidden' }}>
             <img src={OFFICE} alt="Equipo Sidartha" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div style={{ borderRadius: 18, overflow: 'hidden' }}>
-            <ImageSlot label="Evento / stand" shape="rounded" radius={18} />
+            <ImageSlot
+              src={PHOTOS.aboutEvento.img}
+              alt={PHOTOS.aboutEvento.alt}
+              label={PHOTOS.aboutEvento.label}
+              shape="rounded"
+              radius={18}
+            />
           </div>
         </div>
       </div>
@@ -461,8 +496,12 @@ export function Statement() {
   const text =
     'Nos movemos entre la comunicación online y offline, entre eventos y producción audiovisual, entre marcas y comunidades. Creamos estrategias 360° que transforman realidades.';
   return (
-    <section data-fill style={{ background: 'var(--navy-900)', color: '#fff', padding: '130px 0', position: 'relative', overflow: 'hidden' }}>
-      <img src={MARK} alt="" data-par data-speed="0.1" style={{ position: 'absolute', right: -80, top: '50%', width: 460, opacity: 0.07 }} />
+    <section style={{ background: 'var(--navy-900)', color: '#fff', padding: '130px 0', position: 'relative', overflow: 'hidden' }}>
+      <img
+        src={MARK}
+        alt=""
+        style={{ position: 'absolute', right: -80, top: '50%', width: 460, opacity: 0.07, transform: 'translateY(-50%)' }}
+      />
       <div style={{ ...WRAP, position: 'relative' }}>
         <p
           style={{
@@ -473,13 +512,10 @@ export function Statement() {
             margin: 0,
             maxWidth: 1000,
             letterSpacing: '-.015em',
+            color: '#fff',
           }}
         >
-          {text.split(' ').map((w, i) => (
-            <span key={i} className="fw" style={{ display: 'inline-block', color: 'rgba(255,255,255,.22)' }}>
-              {w}&nbsp;
-            </span>
-          ))}
+          {text}
         </p>
       </div>
     </section>

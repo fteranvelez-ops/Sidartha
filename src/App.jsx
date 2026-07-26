@@ -2,24 +2,17 @@ import { useRef, useState } from 'react';
 import Icon from './components/Icon.jsx';
 import useMotion from './lib/useMotion.js';
 import { Nav, Hero, KineticMarquee, About, Fundamentos, Statement, Departments, Process } from './sections/parts.jsx';
-import { Portfolio, Stats, BudhAi, Trust, Manifesto, Contacto, CallCTA, Footer, LegalModal } from './sections/home.jsx';
+import { Portfolio, Stats, Originals, BudhAi, Trust, Manifesto, Contacto, CallCTA, Footer, LegalModal } from './sections/home.jsx';
 
 export default function App() {
-  const ringRef = useRef(null);
-  const dotRef = useRef(null);
   const topRef = useRef(null);
-  const progRef = useRef(null);
   const launchRef = useRef(null);
   const [legal, setLegal] = useState(null);
 
-  useMotion({ ringRef, dotRef, topRef, progRef, launchRef });
+  useMotion({ topRef, launchRef });
 
   return (
     <div>
-      <div ref={progRef} className="prog" />
-      <div ref={ringRef} className="cursor-ring" />
-      <div ref={dotRef} className="cursor-dot" />
-
       <Nav />
       <Hero />
       <KineticMarquee />
@@ -30,6 +23,7 @@ export default function App() {
       <Process />
       <Portfolio />
       <Stats />
+      <Originals />
       <BudhAi />
       <Trust />
       <Manifesto />
@@ -51,7 +45,7 @@ export default function App() {
           <span className="ring" style={{ borderColor: 'var(--teal-400)' }} />
           <span style={{ position: 'absolute', inset: 6, borderRadius: '50%', background: 'var(--teal-500)' }} />
         </span>
-        Pregúntale a budh.ai
+        <span className="launcher-label">Pregúntale a budh.ai</span>
       </a>
 
       {legal && <LegalModal tab={legal} setTab={setLegal} onClose={() => setLegal(null)} />}

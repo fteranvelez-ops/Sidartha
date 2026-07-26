@@ -8,6 +8,15 @@ export const OFFICE = '/assets/photography/office-sidartha-films.jpeg';
 
 export const WRAP = { maxWidth: 1240, margin: '0 auto', padding: '0 40px' };
 
+/* Enlaces del footer. `href: null` deja el icono fuera del render en vez de
+   dejarlo apuntando a ninguna parte: un icono que no lleva a su perfil es
+   peor que un icono ausente. */
+export const SOCIAL = [
+  { icon: 'instagram', label: 'Instagram de Sidartha', href: 'https://www.instagram.com/sidarthafilmsec/' },
+  { icon: 'facebook', label: 'Facebook de Sidartha', href: 'https://www.facebook.com/sidarthacomunicacion' },
+  { icon: 'globe', label: 'sidarthafilms.com', href: 'https://sidarthafilms.com' },
+];
+
 export const DEPARTMENTS = [
   {
     n: '01',
@@ -46,15 +55,75 @@ export const PROCESS = [
   { n: '04', title: 'Generamos impacto', desc: 'Diseñamos experiencias que conectan, inspiran y transforman realidades.' },
 ];
 
+/*
+ * Fotografía.
+ *
+ * Cada `img` en null se dibuja como un placeholder etiquetado, que mantiene la
+ * caja del layout y anuncia lo que falta. Para poner una foto real: copia el
+ * archivo a public/assets/photography/ y escribe aquí su ruta, por ejemplo
+ *
+ *   img: '/assets/photography/manabi.jpg'
+ *
+ * La ruta arranca en / porque public/ se sirve desde la raíz del sitio.
+ * No hace falta tocar ningún componente.
+ */
 export const PROJECTS = [
-  { id: 'manabi', cat: 'Documental', title: 'Manabí, gastronomía milenaria', tall: false },
-  { id: 'dayana', cat: 'Institucional', title: 'Historia de Dayana — Banco Mundial', tall: true },
-  { id: 'lundin', cat: 'Comunicación 360', title: '10 años de Lundin Gold', tall: false },
-  { id: 'huawei', cat: 'Evento', title: 'Huawei Connect', tall: true },
-  { id: 'refugiados', cat: 'Comunicación 360', title: 'Respuesta para Refugiados y Migrantes', tall: false },
-  { id: 'zaimella', cat: 'Evento', title: 'Navidad con Zaimella', tall: true },
-  { id: 'educom', cat: 'Comunicación 360', title: 'Proyecto Educomunicaciones', tall: false },
-  { id: 'aviles', cat: 'Fotografía', title: 'Documental — Manuel Avilés', tall: true },
+  { id: 'manabi', cat: 'Documental', title: 'Manabí, gastronomía milenaria', tall: false, img: null },
+  { id: 'dayana', cat: 'Institucional', title: 'Historia de Dayana — Banco Mundial', tall: true, img: null },
+  { id: 'lundin', cat: 'Comunicación 360', title: '10 años de Lundin Gold', tall: false, img: null },
+  { id: 'huawei', cat: 'Evento', title: 'Huawei Connect', tall: true, img: null },
+  { id: 'refugiados', cat: 'Comunicación 360', title: 'Respuesta para Refugiados y Migrantes', tall: false, img: null },
+  { id: 'zaimella', cat: 'Evento', title: 'Navidad con Zaimella', tall: true, img: null },
+  { id: 'educom', cat: 'Comunicación 360', title: 'Proyecto Educomunicaciones', tall: false, img: null },
+  { id: 'aviles', cat: 'Fotografía', title: 'Documental — Manuel Avilés', tall: true, img: null },
+];
+
+/* Las fotos sueltas que no pertenecen a ninguna lista. Mismo criterio. */
+export const PHOTOS = {
+  aboutRodaje: { img: null, label: 'Rodaje / territorio', alt: 'Equipo de Sidartha rodando en territorio' },
+  aboutEvento: { img: null, label: 'Evento / stand', alt: 'Stand de Sidartha en un evento' },
+  budhaiRetrato: { img: null, label: 'Retrato budh.ai', alt: 'budh.ai' },
+};
+
+/*
+ * Sidartha Originals — la línea editorial propia (cortos, series y
+ * largometrajes documentales).
+ *
+ * No hay títulos aquí a propósito. El catálogo real todavía no está
+ * definido y la guía de diseño es explícita: no inventar obras, cifras ni
+ * créditos. Lo que sí es real son las líneas editoriales, así que la
+ * sección se construye sobre ellas y cada póster queda como placeholder
+ * etiquetado hasta que llegue el arte.
+ *
+ * Cuando existan los títulos, cada colección puede recibir una lista
+ * `titulos` siguiendo el modelo de contenido de la guía (§24).
+ */
+export const ORIGINALS_INTRO =
+  'Sidartha Originals es la casa de nuestros cortos, series y largometrajes documentales: historias concebidas, filmadas y producidas desde una mirada propia.';
+
+export const ORIGINALS_FORMATS = [
+  { label: 'Series documentales', n: '01' },
+  { label: 'Cortos', n: '02' },
+  { label: 'Largometrajes', n: '03' },
+  { label: 'En desarrollo', n: '04' },
+];
+
+/*
+ * Colecciones editoriales. `poster` en null → placeholder etiquetado.
+ *
+ * Los pósters son arte abstracto de relleno: textura, luz y grano, sin
+ * personas, lugares reconocibles ni texto. Son deliberadamente NO
+ * documentales, porque una foto documental inventada de una comunidad o un
+ * proyecto real sería una afirmación falsa — justo lo que la guía prohíbe.
+ * Sustituir por fotogramas reales en cuanto existan los títulos.
+ */
+export const ORIGINALS_COLLECTIONS = [
+  { slug: 'territorio-y-memoria', title: 'Territorio y memoria', poster: '/assets/originals/territorio-y-memoria.webp' },
+  { slug: 'mujeres-que-transforman', title: 'Mujeres que transforman', poster: '/assets/originals/mujeres-que-transforman.webp' },
+  { slug: 'agua-y-ambiente', title: 'Agua y ambiente', poster: '/assets/originals/agua-y-ambiente.webp' },
+  { slug: 'juventudes', title: 'Juventudes', poster: '/assets/originals/juventudes.webp' },
+  { slug: 'pueblos-y-culturas', title: 'Pueblos y culturas', poster: '/assets/originals/pueblos-y-culturas.webp' },
+  { slug: 'derechos', title: 'Derechos', poster: null },
 ];
 
 export const STATS = [
@@ -76,8 +145,8 @@ export const CLIENTS = [
 ];
 
 export const FOUNDERS = [
-  { name: 'Fabricio Terán Vélez', role: 'Fundador · Dirección de cuentas', tel: '0998103186', mail: 'fabricioteran@sidarthafilms.com', slot: 'fabricio' },
-  { name: 'Paulina Carrera Burbano', role: 'Comunicación · Proyectos', tel: '0998373892', mail: 'sidartha@sidarthafilms.com', slot: 'paulina' },
+  { name: 'Fabricio Terán Vélez', role: 'Fundador · Dirección de cuentas', tel: '0998103186', mail: 'fabricioteran@sidarthafilms.com', slot: 'fabricio', img: null },
+  { name: 'Paulina Carrera Burbano', role: 'Comunicación · Proyectos', tel: '0998373892', mail: 'sidartha@sidarthafilms.com', slot: 'paulina', img: null },
 ];
 
 export const LEGAL = {

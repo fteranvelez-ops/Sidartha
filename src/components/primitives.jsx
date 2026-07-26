@@ -1,27 +1,5 @@
 import React from 'react';
 
-/* Marquee — duplicated track so the loop is seamless. The second copy is
-   aria-hidden so screen readers read the content once. */
-export function Marquee({ children, dur = '32s', sep, reverse }) {
-  const items = Array.isArray(children) ? children : [children];
-  const run = (key) => (
-    <div className="mq-track" key={key} aria-hidden={key === 'b'}>
-      {items.map((c, i) => (
-        <span key={i} style={{ display: 'inline-flex', alignItems: 'center' }}>
-          {c}
-          {sep}
-        </span>
-      ))}
-    </div>
-  );
-  return (
-    <div className={'mq' + (reverse ? ' mq-rev' : '')} style={{ '--mq-dur': dur }}>
-      {run('a')}
-      {run('b')}
-    </div>
-  );
-}
-
 export function Eyebrow({ n, children, light }) {
   return (
     <div
@@ -77,7 +55,7 @@ export function ImageSlot({ src, alt = '', label, shape = 'rounded', radius = 12
 
   if (src) {
     return (
-      <div className="islot" style={{ borderRadius }}>
+      <div className="islot islot--filled" style={{ borderRadius }}>
         <img src={src} alt={alt} loading="lazy" />
       </div>
     );
