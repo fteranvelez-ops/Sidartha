@@ -11,17 +11,19 @@ export const ROUTES = {
   originals: '/originals',
   budhai: '/budh-ai',
   contacto: '/contacto',
+  proyecto: '/proyecto',
   terminos: '/terminos',
   privacidad: '/privacidad',
 };
 
-/* Enlaces principales de la barra de navegación. */
+/* Barra de navegación. budh.ai queda fuera a propósito: la página sigue
+   publicada y se llega desde el footer y desde Áreas, pero no compite en el
+   menú con las secciones que sostienen el negocio. */
 export const NAV_LINKS = [
   { label: 'Nosotros', to: ROUTES.nosotros },
   { label: 'Áreas', to: ROUTES.areas },
   { label: 'Trabajo', to: ROUTES.trabajo },
   { label: 'Originals', to: ROUTES.originals },
-  { label: 'budh.ai', to: ROUTES.budhai },
 ];
 
 export const LEGAL_LINKS = [

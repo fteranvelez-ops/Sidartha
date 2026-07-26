@@ -28,6 +28,7 @@ import {
   Minimize2,
   MousePointer2,
   Phone,
+  Play,
   X,
 } from 'lucide-react';
 
@@ -94,6 +95,7 @@ const ICONS = {
   'minimize-2': Minimize2,
   'mouse-pointer-2': MousePointer2,
   phone: Phone,
+  play: Play,
   x: X,
 };
 

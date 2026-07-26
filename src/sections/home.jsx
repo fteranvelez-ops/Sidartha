@@ -25,7 +25,6 @@ import {
   STATS,
   CLIENTS,
   FOUNDERS,
-  LEGAL,
   SOCIAL,
   ORIGINALS_INTRO,
   ORIGINALS_FORMATS,
@@ -665,9 +664,11 @@ export function Footer() {
       links: [
         ['Comunicación Integral', ROUTES.areas],
         ['Producción Audiovisual', ROUTES.areas],
-        ['Network', ROUTES.areas],
         ['Sidartha Originals', ROUTES.originals],
+        /* budh.ai salió del menú principal; el footer es ahora su vía de
+           acceso, así que la página no queda huérfana. */
         ['budh.ai', ROUTES.budhai],
+        ['Empezar un proyecto', ROUTES.proyecto],
       ],
     },
   ];
