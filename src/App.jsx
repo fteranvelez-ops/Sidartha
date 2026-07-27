@@ -13,6 +13,7 @@ import {
   OriginalsPage,
   BudhAiPage,
   ContactoPage,
+  ProyectoPage,
   LegalPage,
   NotFoundPage,
 } from './pages/index.jsx';
@@ -85,6 +86,7 @@ export default function App() {
           <Route path={ROUTES.originals} element={<OriginalsPage />} />
           <Route path={ROUTES.budhai} element={<BudhAiPage />} />
           <Route path={ROUTES.contacto} element={<ContactoPage />} />
+          <Route path={ROUTES.proyecto} element={<ProyectoPage />} />
           <Route path={ROUTES.terminos} element={<LegalPage which="terminos" />} />
           <Route path={ROUTES.privacidad} element={<LegalPage which="privacidad" />} />
           <Route path="*" element={<NotFoundPage />} />

@@ -45,12 +45,13 @@ const dataUri = (file) => {
 };
 
 /* Reescribe las rutas /assets/… que Vite deja en el CSS y el JS.
-   Cubre cualquier subcarpeta: al añadir /assets/originals/ una lista fija
-   de carpetas habría dejado esas imágenes fuera del bundle sin avisar. */
+   Acepta cualquier profundidad de subcarpeta —/assets/originals/yt/x.jpg— y
+   comprueba que la ruta sea un archivo: con dos niveles el patrón también
+   casaba la carpeta intermedia, y leerla como imagen reventaba con EISDIR. */
 const inlineAssetRefs = (text) =>
-  text.replace(/\/assets\/[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+/g, (ref) => {
+  text.replace(/\/assets\/(?:[A-Za-z0-9._-]+\/)+[A-Za-z0-9._-]+\.[A-Za-z0-9]+/g, (ref) => {
     const file = path.join(DIST, ref.slice(1));
-    return fs.existsSync(file) ? dataUri(file) : ref;
+    return fs.existsSync(file) && fs.statSync(file).isFile() ? dataUri(file) : ref;
   });
 
 async function fetchCached(url, name) {
