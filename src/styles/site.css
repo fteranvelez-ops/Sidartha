@@ -1399,31 +1399,37 @@ footer :focus-visible {
 }
 .cwall-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1px;
-  background: var(--color-border);
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  /* El truco de «gap de 1px sobre fondo gris» dibuja la rejilla, pero las
+     celdas que sobran en la última fila se quedan como bloques grises. Con
+     el fondo blanco y una línea por celda vía box-shadow, los huecos
+     desaparecen y la rejilla se sigue viendo igual. */
+  gap: 0;
+  background: #fff;
   border: 1px solid var(--color-border);
   border-radius: 16px;
   overflow: hidden;
 }
 .cwall-item {
   background: #fff;
-  min-height: 104px;
+  box-shadow: 0 0 0 0.5px var(--color-border);
+  min-height: 132px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 22px;
+  padding: 24px;
 }
+/* Muchos de estos logos son marca compuesta con el nombre escrito en cuerpo
+   pequeño. A 46px de alto el texto era ilegible, así que la caja crece y la
+   atenuación se suaviza: siguen leyéndose como conjunto sin desaparecer. */
 .cwall-item img {
   max-width: 100%;
-  max-height: 46px;
+  max-height: 72px;
   width: auto;
   height: auto;
   object-fit: contain;
-  /* Los logos vienen en colores de marca distintos; atenuarlos los alinea
-     como conjunto sin repintarlos, que sería alterar la marca ajena. */
   filter: grayscale(1);
-  opacity: 0.62;
+  opacity: 0.82;
   transition: filter 0.3s ease, opacity 0.3s ease;
 }
 .cwall-item:hover img {
@@ -1907,5 +1913,189 @@ footer :focus-visible {
   }
   .cwall-grid {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+}
+
+/* ============================================================
+   CONTENIDO OFICIAL — áreas, quiénes somos, sostenibilidad
+   ============================================================ */
+
+/* ---------- áreas ---------- */
+.area {
+  padding: 92px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.area:nth-child(even) {
+  background: var(--color-surface);
+}
+.area-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 60px;
+  align-items: center;
+}
+/* Alterna el lado de la foto para que cuatro bloques seguidos no se lean
+   como una lista repetida. */
+.area--flip .area-media {
+  order: 2;
+}
+.area-media {
+  aspect-ratio: 4 / 3;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--color-surface-alt);
+}
+.area-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.area-n {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--teal-600);
+  font-weight: 600;
+}
+.area-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 44px);
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  color: var(--navy-900);
+  margin: 10px 0 0;
+}
+.area-intro,
+.area-closing {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin: 20px 0 0;
+}
+.area-closing {
+  font-size: 15.5px;
+  color: var(--color-text-muted);
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border-strong);
+}
+.area-list {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.area-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 15.5px;
+  color: var(--navy-800);
+}
+.area-list svg {
+  color: var(--teal-500);
+  margin-top: 3px;
+}
+
+/* ---------- quiénes somos ---------- */
+.qs {
+  padding: 96px 0;
+}
+.qs-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 60px;
+  align-items: center;
+}
+.qs-grid + .qs-grid {
+  margin-top: 84px;
+}
+.qs-grid--flip {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+.qs-media {
+  aspect-ratio: 4 / 3;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--color-surface-alt);
+}
+.qs-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.qs-p {
+  font-family: var(--font-body);
+  font-size: 17.5px;
+  line-height: 1.72;
+  color: var(--color-text-secondary);
+  margin: 18px 0 0;
+}
+
+/* ---------- sostenibilidad ---------- */
+.sost {
+  padding: 72px 0;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+.sost-inner {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.sost-inner img {
+  width: 150px;
+  flex-shrink: 0;
+}
+.sost h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--navy-900);
+  margin: 0 0 12px;
+}
+.sost p {
+  font-family: var(--font-body);
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 68ch;
+}
+.sost-lic {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px !important;
+  font-size: 14px !important;
+  color: var(--teal-700) !important;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .area-grid,
+  .qs-grid,
+  .qs-grid--flip {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .area--flip .area-media {
+    order: 0;
+  }
+  .area {
+    padding: 60px 0;
+  }
+  .qs-grid + .qs-grid {
+    margin-top: 56px;
+  }
+  .sost-inner {
+    gap: 24px;
+  }
+  .sost-inner img {
+    width: 110px;
   }
 }

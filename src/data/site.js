@@ -68,20 +68,20 @@ export const PROCESS = [
  * No hace falta tocar ningún componente.
  */
 export const PROJECTS = [
-  { id: 'manabi', cat: 'Documental', title: 'Manabí, gastronomía milenaria', tall: false, img: null },
+  { id: 'manabi', cat: 'Documental', title: 'Manabí, gastronomía milenaria', tall: false, img: '/assets/photography/faro-costa.webp' },
   { id: 'dayana', cat: 'Institucional', title: 'Historia de Dayana — Banco Mundial', tall: true, img: null },
   { id: 'lundin', cat: 'Comunicación 360', title: '10 años de Lundin Gold', tall: false, img: null },
-  { id: 'huawei', cat: 'Evento', title: 'Huawei Connect', tall: true, img: null },
-  { id: 'refugiados', cat: 'Comunicación 360', title: 'Respuesta para Refugiados y Migrantes', tall: false, img: null },
-  { id: 'zaimella', cat: 'Evento', title: 'Navidad con Zaimella', tall: true, img: null },
-  { id: 'educom', cat: 'Comunicación 360', title: 'Proyecto Educomunicaciones', tall: false, img: null },
-  { id: 'aviles', cat: 'Fotografía', title: 'Documental — Manuel Avilés', tall: true, img: null },
+  { id: 'huawei', cat: 'Evento', title: 'Huawei Connect', tall: true, img: '/assets/photography/stand-huawei.webp' },
+  { id: 'refugiados', cat: 'Comunicación 360', title: 'Respuesta para Refugiados y Migrantes', tall: false, img: '/assets/photography/vista-aerea.webp' },
+  { id: 'zaimella', cat: 'Evento', title: 'Navidad con Zaimella', tall: true, img: '/assets/photography/renders-stands.webp' },
+  { id: 'educom', cat: 'Comunicación 360', title: 'Proyecto Educomunicaciones', tall: false, img: '/assets/photography/apuntando-alto.webp' },
+  { id: 'aviles', cat: 'Fotografía', title: 'Documental — Manuel Avilés', tall: true, img: '/assets/photography/camara.webp' },
 ];
 
 /* Las fotos sueltas que no pertenecen a ninguna lista. Mismo criterio. */
 export const PHOTOS = {
-  aboutRodaje: { img: null, label: 'Rodaje / territorio', alt: 'Equipo de Sidartha rodando en territorio' },
-  aboutEvento: { img: null, label: 'Evento / stand', alt: 'Stand de Sidartha en un evento' },
+  aboutRodaje: { img: '/assets/photography/rodaje-equipo.webp', label: 'Rodaje / territorio', alt: 'Equipo de Sidartha durante un rodaje' },
+  aboutEvento: { img: '/assets/photography/stand-huawei.webp', label: 'Evento / stand', alt: 'Stand producido por Sidartha' },
   budhaiRetrato: { img: null, label: 'Retrato budh.ai', alt: 'budh.ai' },
   director: { img: null, label: 'Retrato del director', alt: 'Fabricio Terán Vélez' },
 };
@@ -127,11 +127,14 @@ export const ORIGINALS_COLLECTIONS = [
   { slug: 'derechos', title: 'Derechos', poster: null },
 ];
 
+/* Cifras alineadas con lo que el sitio muestra de verdad: cuatro áreas
+   (las que publica la empresa) y las 21 organizaciones del muro de clientes,
+   no un «+15» redondeado a ojo. */
 export const STATS = [
   { k: '20+', v: 'Años de trayectoria' },
   { k: '360°', v: 'Comunicación integral' },
-  { k: '3', v: 'Áreas al unísono' },
-  { k: '+15', v: 'Marcas e instituciones' },
+  { k: '4', v: 'Áreas al unísono' },
+  { k: '+20', v: 'Marcas e instituciones' },
 ];
 
 export const CLIENTS = [

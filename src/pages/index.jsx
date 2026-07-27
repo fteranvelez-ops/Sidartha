@@ -11,13 +11,15 @@ import { ROUTES } from '../routes.js';
 import { WRAP, DEPARTMENTS, ORIGINALS_FORMATS, ORIGINALS_INTRO } from '../data/site.js';
 import { LEGAL } from '../data/legal.js';
 import { CLIENTS_LOGOS } from '../data/clients.js';
-import { COMPANY_FACTS, SERVICES_OFFICIAL } from '../data/research.js';
+import { COMPANY_FACTS, AREAS_OFFICIAL, OFFICIAL_COPY, PHOTOS_OFFICIAL } from '../data/research.js';
 import { ALL_VIDEOS, VIDEO_COLLECTIONS, YT_CHANNEL } from '../data/videos.js';
 import { Hero, KineticMarquee, About, Fundamentos, Statement, Departments, Process } from '../sections/parts.jsx';
 import { Portfolio, Stats, BudhAi, Manifesto, Contacto, CallCTA } from '../sections/home.jsx';
 import { DirectorSection, Filmography } from '../sections/director.jsx';
 import { VideoCatalogue, ClientWall } from '../sections/videos.jsx';
 import Brief from '../sections/brief.jsx';
+import Areas from '../sections/areas.jsx';
+import { QuienesSomos, Sostenibilidad } from '../sections/quienes.jsx';
 
 /* Cabecera de las páginas interiores. La portada no la usa: allí manda el Hero. */
 function PageHead({ eyebrow, title, lead }) {
@@ -112,15 +114,16 @@ export function NosotrosPage() {
   return (
     <>
       <PageHead eyebrow="Quiénes somos" title="Una agencia que sabe contar historias." lead={COMPANY_FACTS.experience} />
-      <About />
+      <QuienesSomos />
       <Fundamentos />
       <DirectorSection />
       <Filmography />
       <Stats />
       <ClientWall clients={CLIENTS_LOGOS} />
+      <Sostenibilidad />
       <MoreLinks
         items={[
-          { to: ROUTES.areas, title: 'Qué hacemos', desc: 'Las tres áreas y cómo trabajamos.' },
+          { to: ROUTES.areas, title: 'Qué hacemos', desc: 'Las cuatro áreas y cómo trabajamos.' },
           { to: ROUTES.trabajo, title: 'Nuestro trabajo', desc: 'El portafolio por formato.' },
         ]}
       />
@@ -135,27 +138,9 @@ export function AreasPage() {
       <PageHead
         eyebrow="Qué hacemos"
         title="Nuestras áreas"
-        lead="Son tres, pero trabajan al unísono. Ninguna produce sin que las otras dos hayan entendido el problema."
+        lead="Cuatro frentes que trabajan al unísono. Ninguno produce sin que los otros hayan entendido el problema."
       />
-
-      {/* Las líneas de servicio tal como las nombra la empresa. */}
-      <section className="svc">
-        <div style={{ ...WRAP }}>
-          <Reveal>
-            <p className="svc-eyebrow">Líneas de servicio</p>
-          </Reveal>
-          <div className="svc-grid">
-            {SERVICES_OFFICIAL.map((s, i) => (
-              <Reveal key={s} className="svc-item" delay={i * 60}>
-                <span className="svc-n">{String(i + 1).padStart(2, '0')}</span>
-                <h2>{s}</h2>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Departments />
+      <Areas />
       <Process />
       <MoreLinks
         items={[
